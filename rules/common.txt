@@ -407,3 +407,4 @@
 /password.txt                {status=200}    {type_no="html"}
 /php.ini                     {status=200}    {type_no="html"}
 /robots.txt                  {status=200}    {type_no="html"}
+/sftp-config.json	     {status=200}    {type_no="html"}   {tag="password"}
