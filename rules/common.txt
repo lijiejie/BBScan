@@ -1,0 +1,409 @@
+# urls for InfoDisclosurePlugin
+# last modified: 2015-11-13 my[at]lijiejie.com
+# format: path {severity=Severity} {tag="text string to find"} {status=HTTP_STATUS} {type="content-type should contain this string"} {type_no="content-type should not contain this string"}
+# each item must starts with right slash "/"
+# severity is 3 by default
+
+
+# Admin Panel
+/admin/    {severity=2}
+/config/   {severity=2}
+/manage/   {severity=2}
+/backup/   {severity=2}
+/backend/  {severity=2}
+/administrator/   {severity=2}
+/admin-console/   {severity=2}
+/admin-control/   {severity=2}
+/control          {severity=2}
+/houtai/   {severity=2}
+/back/     {severity=2}
+/Console/  {severity=2}
+/ControlPanel/     {severity=2}
+/server-status     {severity=2}
+/server-info/      {severity=2}
+/api               {severity=2}
+/app-admin         {severity=2}
+/app/config/database.yml       {status=200}    {type_no="html"}
+/cgi-admin         {severity=2}
+/cms-admin         {severity=2}
+/solr/admin/       {tag="Schema Browser"} {status=200}
+
+
+/admin.php {severity=2}   {status=200}
+/admin.jsp {severity=2}   {status=200}
+/admin.do  {severity=2}   {status=200}
+/login.php {severity=2}   {status=200}
+/login.jsp {severity=2}   {status=200}
+/login.do  {severity=2}   {status=200}
+/admin.html {severity=2}  {status=200}
+
+/index.php/login/     {severity=2}    {status=200}
+
+/conf      {severity=2}
+/test      {severity=2}
+/cache     {severity=2}
+/cms       {severity=2}
+
+
+# Web Editors
+/edit               {severity=2}
+/editor             {severity=2}
+/ewebeditor/        {severity=2}
+/editor/ewebeditor/ {severity=2}
+/editor/FCKeditor/  {severity=2}
+/edit/              {severity=2}
+/ckfinder/          {severity=2}
+/fckeditor          {severity=2}
+/inc/fckeditor      {severity=2}
+/include/fckeditor             {severity=2}
+/plugins/editors/fckeditor     {severity=2}
+/plugins/fckeditor             {severity=2}
+
+
+# Tomcat Examples
+/examples           {severity=2}
+/examples/servlets/servlet/SessionExample    {severity=2}
+/manager/html       {severity=2}
+
+
+# Database
+/db/       {severity=1}
+/data/	   {severity=2}
+/database/ {severity=2}
+/sqladm    {severity=2} 
+/sql       {severity=2}
+/SQL       {severity=2}
+/sqladmin  {severity=2}
+/mysql     {severity=2}
+/MySQL/    {severity=2}
+/sqlnet.log       {status=200}
+/data/user.txt    {status=200}       {type_no="html"}
+/user.txt         {status=200}       {type_no="html"}
+
+
+/phpinfo.php   {tag="allow_url_fopen"}  {status=200}
+/info.php      {tag="allow_url_fopen"}  {status=200}
+/index.php     {tag="allow_url_fopen"}  {status=200}
+/mysql.php     {status=200}
+/sql.php       {status=200}
+/mysql/add_user.php   {status=200}
+/cachemonitor/statistics.jsp    {severity=2}   {status=200}
+/test.php      {status=200}
+/test2.php     {status=200}
+/test.jsp      {status=200}
+/test2.php     {status=200}
+/test.html     {status=200}
+/test2.html    {status=200}
+/test.txt      {status=200}     {type_no="html"}
+/test2.txt     {status=200}     {type_no="html"}
+/debug.php     {status=200}
+/t.php         {tag="allow_url_fopen"}   {status=200}
+/i.php         {tag="allow_url_fopen"}   {status=200}
+/upload        {status=200}
+/upload.php    {status=200}
+/upload.do     {status=200}
+/upload.jsp    {status=200}
+/upload.html   {status=200}
+/swfupload/swfupload.swf    {status=200}   {severity=2}    {type_no="html"}
+/swfupload    {severity=2}
+/js/swfupload/swfupload.swf     {status=200}               {type_no="html"}
+/uploadify
+
+
+/jmx-console/    {severity=2}
+/jmx-console/HtmlAdaptor       {status=200}
+/cacti/          {severity=2}
+/zabbix/         {severity=2}
+/jira/           {severity=2}
+/nagios/         {severity=2}
+/kibana/         {severity=2}
+/jenkins/	 {severity=2}  {status=200}
+/memadmin/index.php      {tag="MemAdmin"}
+/phpmyadmin/index.php    {tag="phpMyAdmin"}    {status=200}
+/_phpmyadmin/index.php   {tag="phpMyAdmin"}    {status=200}
+/pma/index.php           {tag="phpMyAdmin"}    {status=200}
+/php-my-admin/index.php           {tag="phpMyAdmin"}   {status=200}
+/php-myadmin/index.php            {tag="phpMyAdmin"}   {status=200}
+/php_my_admin/index.php           {tag="phpMyAdmin"}   {status=200}
+/pmadmin/index.php                {tag="phpMyAdmin"}   {status=200}
+/pmyadmin/index.php               {tag="phpMyAdmin"}   {status=200}
+/pmd/index.php                    {tag="phpMyAdmin"}   {status=200}
+/phpmyadmin2/index.php    {tag="phpMyAdmin"}    {status=200}
+/phpmyadmin3/index.php    {tag="phpMyAdmin"}    {status=200}
+/phpmyadmin2014/index.php    {tag="phpMyAdmin"}    {status=200}
+/phpmyadmin2015/index.php    {tag="phpMyAdmin"}    {status=200}
+
+# Directory traversal
+/../../../../../../../../../../../../../etc/passwd  {tag="root:x:"}
+//../../../../../../../../../../../../../etc/passwd {tag="root:x:"}
+/../../../../../../../../../../../../../etc/hosts   {tag="localhost"}
+/../../../../../../../../../../../../../etc/sysconfig/network-scripts/ifcfg-eth1    {tag="GATEWAY="}
+/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/etc/passwd {tag="root:x:"}
+/..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2Fetc%2Fpasswd    {tag="root:x:"}
+/..%252F..%252F..%252F..%252F..%252F..%252F..%252F..%252F..%252Fetc%252Fpasswd                    {tag="root:x:"}
+/%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2fetc%2fpasswd    {tag="root:x:"}
+//././././././././././././././././././././././././../../../../../../../../etc/passwd              {tag="root:x:"}
+/etc/passwd    {tag="root:x:"}
+/etc/hosts     {tag="localhost"}
+
+
+# Discuz!
+/config/config_ucenter.php.bak         {status=200}
+/bbs/config/config_ucenter.php.bak     {status=200}
+/config/config_global.php.1            {status=200}
+/uc_server/data/config.inc.php.bak     {status=200}
+/config/config_global.php.bak          {status=200}
+/uc_server/data/config.inc.php.bak     {status=200}
+/include/config.inc.php                {status=200}
+/include/config.inc.php.temp           {status=200}
+/bbs/.config.inc.php.swp               {status=200}
+
+
+/access.log        {status=200}	    {type_no="html"}
+/error.log         {status=200}     {type_no="html"}
+/errors.log        {status=200}     {type_no="html"}
+/debug.log         {status=200}     {type_no="html"}
+/.bash_history     {status=200}     {type_no="html"}
+/.bash_history.php {status=200}     {type_no="html"}   
+/.bashrc           {status=200}     {type_no="html"}
+/.cvsignore        {status=200}     {type_no="html"}
+/.DS_Store         {status=200}     {type_no="html"}
+/.history          {status=200}     {type_no="html"}
+/.htaccess         {status=200}     {type_no="html"}
+/htaccess.bak      {status=200}     {type_no="html"}
+/htaccess.txt      {status=200}     {type_no="html"}
+/.htpasswd         {status=200}     {type_no="html"}
+/.htpasswd.bak     {status=200}     {type_no="html"}
+/nohup.out         {status=200}     {type_no="html"}
+/.idea/workspace.xml    {status=200}    {tag="xml"}
+/.mysql_history         {status=200}    {type_no="html"}
+/.old                   {status=200}    {type_no="html"}
+/.passwd                {status=200}    {type_no="html"}
+/.ssh                   {status=200}    {type_no="html"}
+/httpd.conf             {status=200}
+/id_dsa                 {status=200}
+/Web.config             {status=200}
+
+
+# webshell
+/shell.php              {status=200}
+/shell.jsp              {status=200}
+/hack.php               {status=200}
+/1.php                  {status=200}
+/1.asp                  {status=200}
+/1.jsp                  {status=200}
+/hack.jsp               {status=200}
+/hack.asp               {status=200}
+/spy.php                {status=200}
+/phpspy.php             {status=200}
+/webshell.php           {status=200}
+/angle.php              {status=200}
+/s.php                  {status=200}
+/php.php                {status=200}
+/a.php                  {status=200}
+/b.php                  {status=200}
+/browser.jsp            {status=200}
+
+
+/{hostname}.zip         {status=200}    {type_no="html"}
+/{hostname}.rar         {status=200}    {type_no="html"}
+/{hostname}.tar.gz      {status=200}    {type_no="html"}
+/{hostname}.tar.bz2     {status=200}    {type_no="html"}
+/{hostname}.tgz         {status=200}    {type_no="html"}
+
+/admin.zip              {status=200}    {type_no="html"}
+/admin.rar              {status=200}    {type_no="html"}
+/admin.tar.gz           {status=200}    {type_no="html"}
+/admin.tar.bz2          {status=200}    {type_no="html"}
+/admin.tgz              {status=200}    {type_no="html"}
+
+/backup.zip             {status=200}    {type_no="html"}
+/backup.rar             {status=200}    {type_no="html"}
+/backup.tar.gz          {status=200}    {type_no="html"}
+/backup.tgz             {status=200}    {type_no="html"}
+/back.tar.bz2           {status=200}    {type_no="html"}
+
+/db.zip                 {status=200}    {type_no="html"}
+/db.rar                 {status=200}    {type_no="html"}
+/db.tar.gz              {status=200}    {type_no="html"}
+/db.tgz                 {status=200}    {type_no="html"}
+/db.tar.bz2             {status=200}    {type_no="html"}
+/db.log                 {status=200}    {type_no="html"}
+/db.inc                 {status=200}	{type_no="html"}
+/db.sqlite              {status=200}    {type_no="html"}
+
+/data.zip               {status=200}    {type_no="html"}
+/data.rar               {status=200}    {type_no="html"}
+/data.tar.gz            {status=200}    {type_no="html"}
+/data.tgz               {status=200}    {type_no="html"}
+/data.tar.bz2           {status=200}    {type_no="html"}
+
+/database.zip           {status=200}    {type_no="html"}
+/database.rar           {status=200}    {type_no="html"}
+/database.tar.gz        {status=200}    {type_no="html"}
+/database.tgz           {status=200}    {type_no="html"}
+/database.tar.bz2       {status=200}    {type_no="html"}
+
+/ftp.zip                {status=200}    {type_no="html"}
+/ftp.rar                {status=200}    {type_no="html"}
+/ftp.tar.gz             {status=200}    {type_no="html"}
+/ftp.tgz                {status=200}    {type_no="html"}
+/ftp.tar.bz2            {status=200}    {type_no="html"}
+
+/log.txt                {status=200}    {type_no="html"}
+/log.tar.gz             {status=200}    {type_no="html"}
+/log.rar                {status=200}    {type_no="html"}
+/log.zip                {status=200}    {type_no="html"}
+/log.tgz                {status=200}    {type_no="html"}
+/log.tar.bz2            {status=200}    {type_no="html"}
+
+/web.zip                {status=200}    {type_no="html"}
+/web.rar                {status=200}    {type_no="html"}
+/web.tar.gz             {status=200}    {type_no="html"}
+/web.tgz                {status=200}    {type_no="html"}
+/web.tar.bz2            {status=200}    {type_no="html"}
+
+/www.log                {status=200}    {type_no="html"}
+/www.zip                {status=200}    {type_no="html"}
+/www.rar                {status=200}    {type_no="html"}
+/www.tar.gz             {status=200}    {type_no="html"}
+/www.tgz                {status=200}    {type_no="html"}
+/www.tar.bz2            {status=200}    {type_no="html"}
+
+/wwwroot.zip            {status=200}    {type_no="html"}
+/wwwroot.rar            {status=200}    {type_no="html"}
+/wwwroot.tar.gz         {status=200}    {type_no="html"}
+/wwwroot.tgz            {status=200}    {type_no="html"}
+/wwwroot.tar.bz2        {status=200}    {type_no="html"}
+
+/sql.log            {status=200}     {type_no="html"}
+/sql.zip            {status=200}     {type_no="html"}
+/sql.rar            {status=200}     {type_no="html"}
+/sql.tar.gz         {status=200}     {type_no="html"}
+/sql.tgz            {status=200}     {type_no="html"}
+/sql.tar.bz2        {status=200}     {type_no="html"}
+/sql.inc            {status=200}     {type_no="html"}
+
+/data.sql               {status=200}     {type_no="html"}
+/database.sql           {status=200}     {type_no="html"}
+/db.sql                 {status=200}     {type_no="html"}
+/test.sql               {status=200}     {type_no="html"}
+/admin.sql              {status=200}     {type_no="html"}
+/backup.sql             {status=200}     {type_no="html"}
+/user.sql               {status=200}     {type_no="html"}
+/sql.sql                {status=200}     {type_no="html"}
+
+/index.zip              {status=200}       {type_no="html"}
+/index.7z               {status=200}       {type_no="html"}
+/index.bak              {status=200}       {type_no="html"}
+/index.rar              {status=200}       {type_no="html"}
+/index.tar.tz           {status=200}       {type_no="html"}
+/index.tar.bz2          {status=200}       {type_no="html"}
+/index.tar.gz           {status=200}       {type_no="html"}
+
+
+# Resin
+/resin-doc/resource/tutorial/jndi-appconfig/test?inputFile=/etc/passwd    {tag="root:x:"}
+/resin-doc/viewfile/?contextpath=/&servletpath=&file=index.jsp            {tag="This is the default start page for the Resin server"}
+
+
+# Java web
+/WEB-INF/web.xml                             {tag="xml"}    {status=200}
+/WEB-INF/web.xml.bak                         {tag="xml"}    {status=200}
+/WEB-INF/applicationContext.xml              {tag="xml"}    {status=200}
+/WEB-INF/applicationContext-slave.xml        {tag="xml"}    {status=200}
+/WEB-INF/config.xml    {tag="xml"}
+/WEB-INF/spring.xml    {tag="xml"}
+/WEB-INF/struts-config.xml    {tag="xml"}
+/WEB-INF/struts-front-config.xml    {tag="xml"}
+/WEB-INF/struts/struts-config.xml   {tag="xml"}
+/WEB-INF/classes/
+/WEB-INF/classes/config/
+/WEB-INF/classes/spring.xml    {tag="xml"}
+/WEB-INF/classes/struts.xml    {tag="xml"}
+/WEB-INF/classes/struts_manager.xml     {tag="xml"}
+/WEB-INF/classes/conf/datasource.xml    {tag="xml"}
+/WEB-INF/classes/data.xml    {tag="xml"}
+/WEB-INF/classes/config/applicationContext.xml    {tag="xml"}
+/WEB-INF/classes/applicationContext.xml    {tag="xml"}
+/WEB-INF/classes/conf/spring/applicationContext-datasource.xml    {tag="xml"}
+/WEB-INF/config/db/dataSource.xml    {tag="xml"}
+/WEB-INF/spring-cfg/applicationContext.xml    {tag="xml"}
+/WEB-INF/dwr.xml    {tag="xml"}
+/WEB-INF/classes/hibernate.cfg.xml    {tag="xml"}
+/WEB-INF/classes/rabbitmq.xml         {tag="xml"}
+/WEB-INF/database.properties    {status=200}      {type_no="html"}
+/WEB-INF/web.properties         {status=200}      {type_no="html"}
+/WEB-INF/log4j.properties       {status=200}      {type_no="html"}
+/WEB-INF/classes/dataBase.properties      {status=200}    {type_no="html"}
+/WEB-INF/classes/application.properties   {status=200}    {type_no="html"}
+/WEB-INF/classes/jdbc.properties          {status=200}    {type_no="html"}
+/WEB-INF/classes/db.properties            {status=200}    {type_no="html"}
+/WEB-INF/classes/conf/jdbc.properties     {status=200}    {type_no="html"}
+/WEB-INF/classes/security.properties      {status=200}    {type_no="html"}
+/WEB-INF/conf/database_config.properties  {status=200}    {type_no="html"}
+/WEB-INF/config/dbconfig      {status=200}
+/WEB-INF/conf/activemq.xml    {tag="xml"}
+/server.xml                   {tag="xml"}
+/config/database.yml          {status=200}    {type_no="html"}
+
+
+# Zend framework configuration file information disclosure
+/application/configs/application.ini    {tag="["}    {type_no="html"}
+
+# SVN and Git
+/.svn/
+/.svn/entries         {status=200}
+/.svn/text-base/
+/.git/config          {status=200}
+/.git/index           {status=200}
+/.git/HEAD	      {status=200}
+/CVS/Root             {status=200}
+
+
+# Wordpress
+/wp-login.php         {tag="user_login"} {status=200}
+/wp-admin/
+/wp-config.inc        {status=200}     {type_no="html"}
+/wp-config.old        {status=200}
+/wp-config.php.inc    {status=200}
+/wp-config.php~       {status=200}
+/wordpress/           {status=200}
+
+
+# 
+/.ssh/id_rsa               {status=200}
+/.ssh/id_rsa.pub           {status=200}
+/.ssh/authorized_keys      {status=200}
+/.ssh/known_hosts          {status=200}
+/owa/
+/readme               {status=200}
+/README               {status=200}
+/readme.html          {status=200}
+/changelog.txt        {status=200}      {type_no="html"}
+/CHANGELOG.txt        {status=200}      {type_no="html"}
+/CHANGELOG.TXT        {status=200}      {type_no="html"}
+/info.txt             {status=200}      {type_no="html"}
+/install.log          {status=200}      {type_no="html"}
+/install.txt          {status=200}      {type_no="html"}
+/INSTALL.TXT          {status=200}      {type_no="html"}
+/config.php           {status=200}
+/config.inc           {status=200}	{type_no="html"}
+/config.ini           {status=200}      {type_no="html"}
+/configuration.ini    {status=200}      {type_no="html"}
+/settings.php         {status=200}	
+/settings.ini         {status=200}      {type_no="html"}
+/database.csv         {status=200}	{type_no="html"}
+/database.inc         {status=200}      {type_no="html"}
+/database.log         {status=200}      {type_no="html"}
+/fantastico_fileslist.txt    {status=200}     {type_no="html"}
+/global.asa.bak       {status=200}
+/invoker/JMXInvokerServlet   {status=200}
+/j_security_check            {status=200}
+/license.txt                 {status=200}    {type_no="html"}
+/logfile    {status=200}
+/logfiles   {status=200}
+/passwd.txt                  {status=200}    {type_no="html"}
+/password.txt                {status=200}    {type_no="html"}
+/php.ini                     {status=200}    {type_no="html"}
+/robots.txt                  {status=200}    {type_no="html"}

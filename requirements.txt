@@ -1,0 +1,2 @@
+BeautifulSoup4==4.3.2
+py2-ipaddress==3.4.1
