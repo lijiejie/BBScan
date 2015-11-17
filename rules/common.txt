@@ -76,7 +76,7 @@
 /sqladmin  {severity=2}
 /mysql     {severity=2}
 /MySQL/    {severity=2}
-/sqlnet.log       {status=200}
+/sqlnet.log       {status=200}       {type_no="html"}
 /data/user.txt    {status=200}       {type_no="html"}
 /user.txt         {status=200}       {type_no="html"}
 
@@ -91,7 +91,6 @@
 /test.php      {status=200}
 /test2.php     {status=200}
 /test.jsp      {status=200}
-/test2.php     {status=200}
 /test.html     {status=200}
 /test2.html    {status=200}
 /test.txt      {status=200}     {type_no="html"}
