@@ -36,6 +36,7 @@
 /login.jsp {severity=2}   {status=200}
 /login.do  {severity=2}   {status=200}
 /admin.html {severity=2}  {status=200}
+/login     {severity=2}   {status=200}
 
 /index.php/login/     {severity=2}    {status=200}
 
@@ -112,6 +113,7 @@
 /jmx-console/    {severity=2}
 /jmx-console/HtmlAdaptor       {status=200}
 /cacti/          {severity=2}
+/cacti/cacti.sql {status=200}  {type_no="html"}
 /zabbix/         {severity=2}
 /jira/           {severity=2}
 /nagios/         {severity=2}
@@ -407,3 +409,5 @@
 /php.ini                     {status=200}    {type_no="html"}
 /robots.txt                  {status=200}    {type_no="html"}
 /sftp-config.json	     {status=200}    {type_no="html"}   {tag="password"}
+/memadmin/index.php	     {status=200}    {tag="MemAdmin"}
+/login			     {status=200}    {tag="<title>Jenkins</title>"}
