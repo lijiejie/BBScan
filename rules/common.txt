@@ -359,12 +359,12 @@
 
 # SVN and Git
 /.svn/
-/.svn/entries         {status=200}
+/.svn/entries         {status=200}     {type_no="html"}
 /.svn/text-base/
-/.git/config          {status=200}
-/.git/index           {status=200}
+/.git/config          {status=200}     {type_no="html"}
+/.git/index           {status=200}     {type_no="html"}
 /.git/HEAD	      {status=200}
-/CVS/Root             {status=200}
+/CVS/Root             {status=200}     {type_no="html"}
 
 
 # Wordpress
