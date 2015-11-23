@@ -68,15 +68,19 @@
 
 
 # Database
-/db/       {severity=1}
+/db/       {severity=2}
+/DB/       {severity=2}
 /data/	   {severity=2}
+/DATA/	   {severity=2}
 /database/ {severity=2}
+/DATABASE/ {severity=2}
 /sqladm    {severity=2} 
 /sql       {severity=2}
 /SQL       {severity=2}
 /sqladmin  {severity=2}
 /mysql     {severity=2}
 /MySQL/    {severity=2}
+/MYSQL/    {severity=2}
 /sqlnet.log       {status=200}       {type_no="html"}
 /data/user.txt    {status=200}       {type_no="html"}
 /user.txt         {status=200}       {type_no="html"}
@@ -133,6 +137,7 @@
 /phpmyadmin3/index.php    {tag="phpMyAdmin"}    {status=200}
 /phpmyadmin2014/index.php    {tag="phpMyAdmin"}    {status=200}
 /phpmyadmin2015/index.php    {tag="phpMyAdmin"}    {status=200}
+/dbadmin/index.php           {tag="phpMyAdmin"}    {status=200}
 
 # Directory traversal
 /../../../../../../../../../../../../../etc/passwd  {tag="root:x:"}
