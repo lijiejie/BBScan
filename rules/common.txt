@@ -100,6 +100,7 @@
 /test2.html    {status=200}
 /test.txt      {status=200}     {type_no="html"}
 /test2.txt     {status=200}     {type_no="html"}
+/1.txt         {status=200}     {type_no="html"}
 /debug.php     {status=200}
 /t.php         {tag="allow_url_fopen"}   {status=200}
 /i.php         {tag="allow_url_fopen"}   {status=200}
@@ -108,9 +109,9 @@
 /upload.do     {status=200}
 /upload.jsp    {status=200}
 /upload.html   {status=200}
-/swfupload/swfupload.swf    {status=200}   {severity=2}    {type_no="html"}
 /swfupload    {severity=2}
-/js/swfupload/swfupload.swf     {status=200}               {type_no="html"}
+/swfupload/swfupload.swf        {status=200}      {type_no="html"}
+/js/swfupload/swfupload.swf     {status=200}      {type_no="html"}
 /uploadify
 
 
@@ -196,19 +197,27 @@
 /shell.jsp              {status=200}
 /hack.php               {status=200}
 /1.php                  {status=200}
+/2.php                  {status=200}
+/3.php                  {status=200}
 /1.asp                  {status=200}
 /1.jsp                  {status=200}
+/2.jsp                  {status=200}
+/3.jsp                  {status=200}
 /hack.jsp               {status=200}
 /hack.asp               {status=200}
 /spy.php                {status=200}
 /phpspy.php             {status=200}
 /webshell.php           {status=200}
 /angle.php              {status=200}
-/s.php                  {status=200}
 /php.php                {status=200}
+/one.php                {status=200}
 /a.php                  {status=200}
 /b.php                  {status=200}
+/c.php                  {status=200}
+/s.php                  {status=200}
 /browser.jsp            {status=200}
+/JFolder.jsp            {status=200}
+/one.jsp		{status=200}
 
 
 /{hostname}.zip         {status=200}    {type_no="html"}
@@ -227,7 +236,7 @@
 /backup.rar             {status=200}    {type_no="html"}
 /backup.tar.gz          {status=200}    {type_no="html"}
 /backup.tgz             {status=200}    {type_no="html"}
-/back.tar.bz2           {status=200}    {type_no="html"}
+/backup.tar.bz2           {status=200}    {type_no="html"}
 
 /db.zip                 {status=200}    {type_no="html"}
 /db.rar                 {status=200}    {type_no="html"}
@@ -237,12 +246,14 @@
 /db.log                 {status=200}    {type_no="html"}
 /db.inc                 {status=200}	{type_no="html"}
 /db.sqlite              {status=200}    {type_no="html"}
+/db.7z	                {status=200}    {type_no="html"}
 
 /data.zip               {status=200}    {type_no="html"}
 /data.rar               {status=200}    {type_no="html"}
 /data.tar.gz            {status=200}    {type_no="html"}
 /data.tgz               {status=200}    {type_no="html"}
 /data.tar.bz2           {status=200}    {type_no="html"}
+/data.7z           {status=200}    {type_no="html"}
 
 /database.zip           {status=200}    {type_no="html"}
 /database.rar           {status=200}    {type_no="html"}
@@ -262,12 +273,21 @@
 /log.zip                {status=200}    {type_no="html"}
 /log.tgz                {status=200}    {type_no="html"}
 /log.tar.bz2            {status=200}    {type_no="html"}
+/log.7z                 {status=200}    {type_no="html"}
+
+/error.tar.gz           {status=200}    {type_no="html"}
+/error.rar              {status=200}    {type_no="html"}
+/error.zip              {status=200}    {type_no="html"}
+/error.tgz              {status=200}    {type_no="html"}
+/error.tar.bz2          {status=200}    {type_no="html"}
+/error.7z               {status=200}    {type_no="html"}
 
 /web.zip                {status=200}    {type_no="html"}
 /web.rar                {status=200}    {type_no="html"}
 /web.tar.gz             {status=200}    {type_no="html"}
 /web.tgz                {status=200}    {type_no="html"}
 /web.tar.bz2            {status=200}    {type_no="html"}
+/web.7z                 {status=200}    {type_no="html"}
 
 /www.log                {status=200}    {type_no="html"}
 /www.zip                {status=200}    {type_no="html"}
@@ -275,12 +295,28 @@
 /www.tar.gz             {status=200}    {type_no="html"}
 /www.tgz                {status=200}    {type_no="html"}
 /www.tar.bz2            {status=200}    {type_no="html"}
+/www.7z                 {status=200}    {type_no="html"}
 
 /wwwroot.zip            {status=200}    {type_no="html"}
 /wwwroot.rar            {status=200}    {type_no="html"}
 /wwwroot.tar.gz         {status=200}    {type_no="html"}
 /wwwroot.tgz            {status=200}    {type_no="html"}
 /wwwroot.tar.bz2        {status=200}    {type_no="html"}
+/wwwroot.7z             {status=200}    {type_no="html"}
+
+/code.zip            {status=200}    {type_no="html"}
+/code.rar            {status=200}    {type_no="html"}
+/code.tar.gz         {status=200}    {type_no="html"}
+/code.tgz            {status=200}    {type_no="html"}
+/code.tar.bz2        {status=200}    {type_no="html"}
+/code.7z             {status=200}    {type_no="html"}
+
+/src.zip            {status=200}    {type_no="html"}
+/src.rar            {status=200}    {type_no="html"}
+/src.tar.gz         {status=200}    {type_no="html"}
+/src.tgz            {status=200}    {type_no="html"}
+/src.tar.bz2        {status=200}    {type_no="html"}
+/src.7z             {status=200}    {type_no="html"}
 
 /sql.log            {status=200}     {type_no="html"}
 /sql.zip            {status=200}     {type_no="html"}
@@ -289,6 +325,7 @@
 /sql.tgz            {status=200}     {type_no="html"}
 /sql.tar.bz2        {status=200}     {type_no="html"}
 /sql.inc            {status=200}     {type_no="html"}
+/sql.7z             {status=200}     {type_no="html"}
 
 /data.sql               {status=200}     {type_no="html"}
 /database.sql           {status=200}     {type_no="html"}
@@ -298,6 +335,7 @@
 /backup.sql             {status=200}     {type_no="html"}
 /user.sql               {status=200}     {type_no="html"}
 /sql.sql                {status=200}     {type_no="html"}
+
 
 /index.zip              {status=200}       {type_no="html"}
 /index.7z               {status=200}       {type_no="html"}
