@@ -65,7 +65,7 @@
 /examples           {severity=2}
 /examples/servlets/servlet/SessionExample    {severity=2}
 /manager/html       {severity=2}
-
+/examples/jsp/       {tag="Examples"} {status=200}
 
 # Database
 /db/       {severity=2}
@@ -176,7 +176,8 @@
 /.cvsignore        {status=200}     {type_no="html"}
 /.DS_Store         {status=200}     {type_no="html"}
 /.history          {status=200}     {type_no="html"}
-/.htaccess         {status=200}     {type_no="html"}
+/.htaccess         {status=200}     {tag="RewriteEngine"}
+/crossdomain.xml   {status=200}     {tag="allow-access-from domain=\"*\""}
 /htaccess.bak      {status=200}     {type_no="html"}
 /htaccess.txt      {status=200}     {type_no="html"}
 /.htpasswd         {status=200}     {type_no="html"}
@@ -397,9 +398,9 @@
 
 # SVN and Git
 /.svn/
-/.svn/entries         {status=200}     {type_no="html"}
+/.svn/entries         {tag="dir\n"} {status=200}
 /.svn/text-base/
-/.git/config          {status=200}     {type_no="html"}
+/.git/config          {tag="repositoryformatversion"} {status=200}
 /.git/index           {status=200}     {type_no="html"}
 /.git/HEAD	      {status=200}
 /CVS/Root             {status=200}     {type_no="html"}
@@ -416,6 +417,9 @@
 
 
 # 
+/                          {status=200}      {tag="<title>Index of /</title>"}
+/                          {status=200}      {tag="<title>Directory Listing For /</title>"}
+/dfshealth.html            {status=200}      {tag="Datanode Information"}
 /.ssh/id_rsa               {status=200}
 /.ssh/id_rsa.pub           {status=200}
 /.ssh/authorized_keys      {status=200}
