@@ -9,7 +9,7 @@
 # /admin.jsp    {status=200}    {tag="type={quote}password{quote}"}
 # /login.jsp    {status=200}    {tag="type={quote}password{quote}"}
 
-/admin/       
+/admin/       {tag="type={quote}password{quote}"}
 /admin.php    {status=200}
 /admin.do     {status=200}
 /login.php    {status=200}     {tag="type={quote}password{quote}"}
