@@ -1,0 +1,113 @@
+# urls for InfoDisclosurePlugin
+# last modified: 2015-11-13 my[at]lijiejie.com
+# format: path {severity=Severity} {tag="text string to find"} {status=HTTP_STATUS} {type="content-type should contain this string"} {type_no="content-type should not contain this string"}
+# each item must starts with right slash "/"
+
+
+/core              {status=206}  {tag="ELF"}
+
+/{sub}.zip         {status=200}    {type="application"}
+/{sub}.rar         {status=200}    {type="application"}
+/{sub}.tar.gz      {status=200}    {type="application"}
+/{sub}.tar.bz2     {status=200}    {type="application"}
+/{sub}.tgz         {status=200}    {type="application"}
+/{sub}.7z          {status=200}    {type="application"}
+
+/{hostname_or_folder}.zip         {status=200}    {type="application"}
+/{hostname_or_folder}.rar         {status=200}    {type="application"}
+/{hostname_or_folder}.tar.gz      {status=200}    {type="application"}
+/{hostname_or_folder}.tar.bz2     {status=200}    {type="application"}
+/{hostname_or_folder}.tgz         {status=200}    {type="application"}
+/{hostname_or_folder}.7z          {status=200}    {type="application"}
+
+
+/backup.zip             {status=200}    {type="application"}
+/backup.rar             {status=200}    {type="application"}
+/backup.tar.gz          {status=200}    {type="application"}
+/backup.tgz             {status=200}    {type="application"}
+/back.tar.bz2           {status=200}    {type="application"}
+
+/db.zip                 {status=200}    {type="application"}
+/db.rar                 {status=200}    {type="application"}
+/db.tar.gz              {status=200}    {type="application"}
+/db.tgz                 {status=200}    {type="application"}
+/db.tar.bz2             {status=200}    {type="application"}
+/db.log                 {status=200}    {type_no="html"}
+/db.inc                 {status=200}	{type_no="html"}
+/db.sqlite              {status=200}    {type="application"}
+
+/data.zip               {status=200}    {type="application"}
+/data.rar               {status=200}    {type="application"}
+/data.tar.gz            {status=200}    {type="application"}
+/data.tgz               {status=200}    {type="application"}
+/data.tar.bz2           {status=200}    {type="application"}
+
+/database.zip           {status=200}    {type="application"}
+/database.rar           {status=200}    {type="application"}
+/database.tar.gz        {status=200}    {type="application"}
+/database.tgz           {status=200}    {type="application"}
+/database.tar.bz2       {status=200}    {type="application"}
+
+/ftp.zip                {status=200}    {type="application"}
+/ftp.rar                {status=200}    {type="application"}
+/ftp.tar.gz             {status=200}    {type="application"}
+/ftp.tgz                {status=200}    {type="application"}
+/ftp.tar.bz2            {status=200}    {type="application"}
+
+/log.txt                {status=200}    {type_no="html"}
+/log.tar.gz             {status=200}    {type="application"}
+/log.rar                {status=200}    {type="application"}
+/log.zip                {status=200}    {type="application"}
+/log.tgz                {status=200}    {type="application"}
+/log.tar.bz2            {status=200}    {type="application"}
+/logs/error.log         {status=200}    {type_no="html"}
+/error.log              {status=200}    {type_no="html"}  
+/logs/error.log         {status=200}    {type_no="html"}
+
+
+/web.zip                {status=200}    {type="application"}
+/web.rar                {status=200}    {type="application"}
+/web.tar.gz             {status=200}    {type="application"}
+/web.tgz                {status=200}    {type="application"}
+/web.tar.bz2            {status=200}    {type="application"}
+
+/www.log                {status=200}    {type_no="html"}
+/www.zip                {status=200}    {type="application"}
+/www.rar                {status=200}    {type="application"}
+/www.tar.gz             {status=200}    {type="application"}
+/www.tgz                {status=200}    {type="application"}
+/www.tar.bz2            {status=200}    {type="application"}
+
+/wwwroot.zip            {status=200}    {type="application"}
+/wwwroot.rar            {status=200}    {type="application"}
+/wwwroot.tar.gz         {status=200}    {type="application"}
+/wwwroot.tgz            {status=200}    {type="application"}
+/wwwroot.tar.bz2        {status=200}    {type="application"}
+
+/sql.log            {status=200}     {type_no="html"}
+/sql.zip            {status=200}     {type="application"}
+/sql.rar            {status=200}     {type="application"}
+/sql.tar.gz         {status=200}     {type="application"}
+/sql.tgz            {status=200}     {type="application"}
+/sql.tar.bz2        {status=200}     {type="application"}
+/sql.inc            {status=200}     {type_no="html"}
+
+/data.sql               {status=200}     {type_no="html"}
+/database.sql           {status=200}     {type_no="html"}
+/db.sql                 {status=200}     {type_no="html"}
+/test.sql               {status=200}     {type_no="html"}
+/admin.sql              {status=200}     {type_no="html"}
+/backup.sql             {status=200}     {type_no="html"}
+/user.sql               {status=200}     {type_no="html"}
+/sql.sql                {status=200}     {type_no="html"}
+
+/index.zip              {status=200}       {type="application"}
+/index.7z               {status=200}       {type="application"}
+/index.bak              {status=200}       {type="application"}
+/index.rar              {status=200}       {type="application"}
+/index.tar.tz           {status=200}       {type="application"}
+/index.tar.bz2          {status=200}       {type="application"}
+/index.tar.gz           {status=200}       {type="application"}
+
+/{hostname_or_folder}.log             {status=200}     {type_no="html"}
+/logs/{hostname_or_folder}.log        {status=200}     {type_no="html"}

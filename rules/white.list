@@ -1,0 +1,44 @@
+﻿# text to search in doc
+# regex can be used
+
+# 匹配的条目将被立即标记 命中
+
+
+
+{text="<title>phpMyAdmin</title>"}
+
+{text="allow_url_fopen"}
+
+{text="MemAdmin"}
+
+{text="This is the default start page for the Resin server"}
+
+# {text="Apache Tomcat"}
+
+{text="Cacti"}
+
+{text="<title>Zabbix</title>"}
+
+{text="Dashboard [Jenkins]"}
+
+{text="Graphite Browser"}
+
+#  {regex_text="<input.*type="password""}
+
+#  {text="Internal Server Error"}
+
+#  {text="Fatal error"}
+
+#  {text="Exception caught"}
+
+#  {text="Incorrect syntax"}
+
+{text="You have an error in your SQL syntax"}
+
+{text="</b> on line <b>"}
+
+{regex_text="<title>.*后台.*</title>"}
+
+{regex_text="<title>.*管理系统.*</title>"}
+
+

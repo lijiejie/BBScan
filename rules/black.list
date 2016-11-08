@@ -1,0 +1,33 @@
+﻿# text to exclude in html doc
+# regex can be used
+# 匹配的条目将被丢弃
+
+
+
+{text="/404/search_children.js"}
+
+{text="http://qzone.qq.com/gy/404/data.js"}
+
+{text="您访问的页面不存在"}
+
+{text="您所访问的页面不存在"}
+
+{text="<center><h1>404 Not Found</h1></center>"}
+
+{text="<p>The server encountered an internal error or"}
+
+{text="http://www.qq.com/babygohome/?pgv_ref=404"}
+
+{text="<h1>410 Gone</h1>"}
+
+{text="controller.*not found"}
+
+{text="<title>404 Page Not Found</title>"}
+
+{text="You do not have permission to get URL"}
+
+{text="<title>403 Forbidden</title>"}
+
+{text="<h1>Whoops, looks like something went wrong.</h1>"}
+
+{text="invalid service url:"}

