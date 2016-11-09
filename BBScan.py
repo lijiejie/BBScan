@@ -607,7 +607,7 @@ if __name__ == '__main__':
                             if _ip not in scanned_ips:
                                 scanned_ips.append(_ip)
                                 #pool.apply_async(func=batch_scan, args=(_ip, q_results, lock, args, None) ).get(timeout=1)
-                                q_targets.put({'file': '', 'url': '_ip'})
+                                q_targets.put({'file': '', 'url': _ip})
                         scanned_ips.append(_network)
             print '[%s] %s targets entered Queue.' % (get_time(), q_targets.qsize())
             print '[%s] Create %s sub Processes...' % (get_time(), args.p)
