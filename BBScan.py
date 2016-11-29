@@ -216,6 +216,12 @@ class InfoDisScanner():
     def get_status(self, url):
         return self._http_request(url)[0]
 
+    def get_title(sefl, html_doc):
+        try:
+            soup = BeautifulSoup(html_doc)
+            return soup.title.string.encode('utf-8').strip()
+        except:
+            return ""
 
     def check_404(self):
         try:
@@ -426,7 +432,7 @@ class InfoDisScanner():
                     # print '[+] [Prefix:%s] [%s] %s' % (prefix, status, 'http://' + self.host +  url)
                     if not prefix in self.results:
                         self.results[prefix]= []
-                    _ = {'status': status, 'url': '%s://%s%s' % (self.schema, self.host, url)}
+                    _ = {'status': status, 'url': '%s://%s%s' % (self.schema, self.host, url),'title':self.get_title(html_doc)}
                     if _ not in self.results[prefix]:
                         self.results[prefix].append(_)
                     self.lock.release()
@@ -515,7 +521,7 @@ def save_report_thread(q_results, file):
                     _str = ""
                     for key in results.keys():
                         for _ in results[key]:
-                            _str += t_normal.substitute( {'status': _['status'], 'url': _['url']} )
+                            _str += t_normal.substitute( {'status': _['status'], 'url': _['url'],'title':_['title']} )
                     _str = t_host.substitute({'host': host, 'list': _str})
                     html_doc += _str
 
