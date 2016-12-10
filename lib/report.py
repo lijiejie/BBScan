@@ -35,5 +35,5 @@ ${list}
 
 
 TEMPLATE_list_item = """
- <li class="normal">[${status}] <a href="${url}" target="_blank">${url}</a></li>
+ <li class="normal">[${status}] [${title}] <a href="${url}" target="_blank">${url}</a></li>
 """
