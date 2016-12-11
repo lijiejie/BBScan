@@ -24,8 +24,7 @@ import sys
 import urllib
 from lib.common import get_time, parse_url, decode_response_text
 from lib.cmdline import parse_args
-from lib.report import TEMPLATE_host, TEMPLATE_html, TEMPLATE_list_item
-
+from lib.report import template
 
 class InfoDisScanner():
     def __init__(self, timeout=600, args=None):
