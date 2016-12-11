@@ -59,8 +59,7 @@ markdown_host = """
 ${list}
 """
 
-markdown_list_item = """
-* __${status}__ ${title} ${url}
+markdown_list_item = """* __${status}__ ${title} ${url}
 """
 
 markdown = {
