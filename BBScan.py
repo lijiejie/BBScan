@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 # A tiny Batch weB vulnerability Scanner
 # my[at]lijiejie.com    http://www.lijiejie.com
