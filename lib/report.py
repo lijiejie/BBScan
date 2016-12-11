@@ -2,7 +2,8 @@
 # report template
 
 
-TEMPLATE_html = """
+#template for html
+html_general= """
 <html>
 <head>
 <title>BBScan Report</title>
@@ -25,15 +26,54 @@ ${content}
 </html>
 """
 
-
-TEMPLATE_host = """
+html_host = """
 <h2>${host}</h2>
 <ul>
 ${list}
 </ul>
 """
 
-
-TEMPLATE_list_item = """
+html_list_item = """
  <li class="normal">[${status}] [${title}] <a href="${url}" target="_blank">${url}</a></li>
 """
+
+html = {
+	'general':html_general,
+	'host':html_host,
+	'list_item':html_list_item,
+	'suffix':'.html'
+}
+
+
+#template for markdown
+markdown_general = """
+# BBScan Report 
+__Please consider to contribute some rules to make BBScan more efficient.__  
+Version:v 1.1
+TimeUsage: ${cost_min} min ${cost_seconds} seconds
+${content}
+"""
+
+markdown_host = """
+## ${host}
+${list}
+"""
+
+markdown_list_item = """
+* __${status}__ ${title} ${url}
+"""
+
+markdown = {
+	'general':markdown_general,
+	'host':markdown_host,
+	'list_item':markdown_list_item,
+	'suffix':'.md'
+}
+
+
+#sumary
+template = {
+	'html':html,
+	'markdown':markdown
+	}
+
