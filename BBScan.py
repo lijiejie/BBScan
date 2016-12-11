@@ -217,7 +217,7 @@ class InfoDisScanner():
 
     def get_title(sefl, html_doc):
         try:
-            soup = BeautifulSoup(html_doc)
+            soup = BeautifulSoup(html_doc,'lxml')
             return soup.title.string.encode('utf-8').strip()
         except:
             return ""
