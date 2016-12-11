@@ -48,7 +48,7 @@ html = {
 #template for markdown
 markdown_general = """
 # BBScan Report 
-__Please consider to contribute some rules to make BBScan more efficient.__  
+Please consider to contribute some rules to make BBScan more efficient.
 Version:v 1.1
 TimeUsage: ${cost_min} min ${cost_seconds} seconds
 ${content}
@@ -59,7 +59,7 @@ markdown_host = """
 ${list}
 """
 
-markdown_list_item = """* __${status}__ ${title} ${url}
+markdown_list_item = """* ${status} ${title} ${url}
 """
 
 markdown = {
