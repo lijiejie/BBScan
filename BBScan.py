@@ -497,13 +497,22 @@ def batch_scan(q_targets, q_results, lock, args):
 
 def save_report_thread(q_results, file):
         start_time = time.time()
-        t_html = Template(TEMPLATE_html)
-        t_host = Template(TEMPLATE_host)
-        t_normal = Template(TEMPLATE_list_item)
-        all_results = []
-        report_name = os.path.basename(file).lower().replace('.txt', '') + '_' + \
-                      time.strftime('%Y%m%d_%H%M%S', time.localtime()) + '.html'
+        if args.md:
+            a_template = template['markdown']
+        else:
+            a_template = template['html']
 
+        t_general = Template(a_template['general'])
+        t_host = Template(a_template['host'])
+        t_list_item = Template(a_template['list_item'])
+        output_file_suffix = a_template['suffix']
+        
+
+        all_results = []
+        
+        report_name = os.path.basename(file).lower().replace('.txt', '') + '_' + \
+                      time.strftime('%Y%m%d_%H%M%S', time.localtime()) + output_file_suffix 
+        
         last_qsize = 0
         global STOP_ME
         try:
