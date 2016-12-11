@@ -51,6 +51,9 @@ def parse_args():
 
     parser.add_argument('--browser', default=False, action='store_true',
                         help='View report with browser after scan finished.')
+    
+    parser.add_argument('-md',default=False,action='store_true',
+                        help='Save the scan report as markdown format')
 
     parser.add_argument('-v', action='version', version='%(prog)s 1.1    By LiJieJie (my[at]lijiejie.com)')
 
