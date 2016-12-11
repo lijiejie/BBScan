@@ -537,7 +537,7 @@ def save_report_thread(q_results, file):
                     cost_time = time.time() - start_time
                     cost_min = int(cost_time / 60)
                     cost_seconds = '%.2f' % (cost_time % 60)
-                    html_doc = t_html.substitute({'cost_min': cost_min, 'cost_seconds': cost_seconds, 'content': html_doc})
+                    html_doc = t_general.substitute({'cost_min': cost_min, 'cost_seconds': cost_seconds, 'content': html_doc})
 
                     with open('report/%s' % report_name, 'w') as outFile:
                         outFile.write(html_doc)
