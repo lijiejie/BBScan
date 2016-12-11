@@ -529,7 +529,7 @@ def save_report_thread(q_results, file):
                     _str = ""
                     for key in results.keys():
                         for _ in results[key]:
-                            _str += t_normal.substitute( {'status': _['status'], 'url': _['url'],'title':_['title']} )
+                            _str += t_list_item.substitute( {'status': _['status'], 'url': _['url'],'title':_['title']} )
                     _str = t_host.substitute({'host': host, 'list': _str})
                     html_doc += _str
 
