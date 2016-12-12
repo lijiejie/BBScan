@@ -35,6 +35,7 @@ You can install required packages with pip
 	                        should be an int between 24 and 31
 	  --timeout Timeout     Max scan minutes for each website, 20 by default
 	  --browser             View report with browser after scan finished.
+	  -md                   Save the scan report as markdown format
 	  -v                    show program's version number and exit
 
 **1. Scan several hosts from command line** 

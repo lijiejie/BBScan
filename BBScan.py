@@ -1,4 +1,4 @@
-#!/bin/env python
+#!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 # A tiny Batch weB vulnerability Scanner
 # my[at]lijiejie.com    http://www.lijiejie.com
@@ -24,8 +24,7 @@ import sys
 import urllib
 from lib.common import get_time, parse_url, decode_response_text
 from lib.cmdline import parse_args
-from lib.report import TEMPLATE_host, TEMPLATE_html, TEMPLATE_list_item
-
+from lib.report import template
 
 class InfoDisScanner():
     def __init__(self, timeout=600, args=None):
@@ -218,7 +217,7 @@ class InfoDisScanner():
 
     def get_title(sefl, html_doc):
         try:
-            soup = BeautifulSoup(html_doc)
+            soup = BeautifulSoup(html_doc,'lxml')
             return soup.title.string.encode('utf-8').strip()
         except:
             return ""
@@ -497,13 +496,22 @@ def batch_scan(q_targets, q_results, lock, args):
 
 def save_report_thread(q_results, file):
         start_time = time.time()
-        t_html = Template(TEMPLATE_html)
-        t_host = Template(TEMPLATE_host)
-        t_normal = Template(TEMPLATE_list_item)
-        all_results = []
-        report_name = os.path.basename(file).lower().replace('.txt', '') + '_' + \
-                      time.strftime('%Y%m%d_%H%M%S', time.localtime()) + '.html'
+        if args.md:
+            a_template = template['markdown']
+        else:
+            a_template = template['html']
 
+        t_general = Template(a_template['general'])
+        t_host = Template(a_template['host'])
+        t_list_item = Template(a_template['list_item'])
+        output_file_suffix = a_template['suffix']
+        
+
+        all_results = []
+        
+        report_name = os.path.basename(file).lower().replace('.txt', '') + '_' + \
+                      time.strftime('%Y%m%d_%H%M%S', time.localtime()) + output_file_suffix 
+        
         last_qsize = 0
         global STOP_ME
         try:
@@ -521,7 +529,7 @@ def save_report_thread(q_results, file):
                     _str = ""
                     for key in results.keys():
                         for _ in results[key]:
-                            _str += t_normal.substitute( {'status': _['status'], 'url': _['url'],'title':_['title']} )
+                            _str += t_list_item.substitute( {'status': _['status'], 'url': _['url'],'title':_['title']} )
                     _str = t_host.substitute({'host': host, 'list': _str})
                     html_doc += _str
 
@@ -529,7 +537,7 @@ def save_report_thread(q_results, file):
                     cost_time = time.time() - start_time
                     cost_min = int(cost_time / 60)
                     cost_seconds = '%.2f' % (cost_time % 60)
-                    html_doc = t_html.substitute({'cost_min': cost_min, 'cost_seconds': cost_seconds, 'content': html_doc})
+                    html_doc = t_general.substitute({'cost_min': cost_min, 'cost_seconds': cost_seconds, 'content': html_doc})
 
                     with open('report/%s' % report_name, 'w') as outFile:
                         outFile.write(html_doc)
