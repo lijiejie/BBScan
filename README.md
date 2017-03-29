@@ -6,6 +6,7 @@
 ## Requirements ##
 * BeautifulSoup4==4.3.2
 * py2-ipaddress==3.4.1
+* dnspython==1.15.0
 
 You can install required packages with pip
 
