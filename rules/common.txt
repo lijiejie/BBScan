@@ -1,6 +1,3 @@
-# URL set for InfoDisclosurePlugin
-# last modified: 2016-11-4 my[at]lijiejie.com
-# format: path {tag="text string to find"} {status=HTTP_STATUS} {type="content-type should contain this string"} {type_no="content-type should not contain this string"}
 # each item must starts with right slash "/"
 # double quote " should be replaced with {quote}
 
@@ -17,9 +14,10 @@
 /admin.html   {status=200}
 /manage/ 
 
+# /crossdomain.xml     {status=200}  {tag="domain={quote}*"}
 
 /server-status          {tag="<title>Apache Status</title>"}
-/server-info/           {status=200}
+# /server-info/           {status=200}
 /solr/                  {tag="<title>Solr Admin</title>"} {status=200} {type="html"}
 /login/       {status=200}    {tag="type={quote}password{quote}"}
 
@@ -27,6 +25,9 @@
 # Web Editors
 /fckeditor/_samples/default.html          {tag="<title>FCKeditor"}   {type="html"}
 /ckeditor/samples/                        {tag="<title>CKEditor Samples</title>"}
+/fck/editor/dialog/fck_spellerpages/spellerpages/server-scripts/spellchecker.php              {status=200}    {type="html"}  {tag="init_spell()"}
+/fckeditor/editor/dialog/fck_spellerpages/spellerpages/server-scripts/spellchecker.php        {status=200}    {type="html"}  {tag="init_spell()"}
+
 
 
 # Tomcat Examples
@@ -40,74 +41,97 @@
 /database.yml                  {status=200}    {type_no="html"}
 /sqlnet.log                    {status=200}    {type_no="html"}
 /database.log         {status=200}      {type_no="html"}
-/db.log         {status=200}      {type_no="html"}
+/db.log         {status=206}      {type="application/octet-stream"}
 /db.conf        {status=200}      {type_no="html"}
 /db.ini         {status=200}      {type_no="html"}   {tag="["}
-
+/logs.ini       {status=200}      {type_no="html"}   {tag="["}
 
 # upload
-# /upload.do     {status=200}    {type="html"}    {tag="file"}
-# /upload.jsp    {status=200}    {type="html"}    {tag="file"}
+/upload.do     {status=200}    {type="html"}    {tag="type={quote}file{quote}"}
+/upload.jsp    {status=200}    {type="html"}    {tag="type={quote}file{quote}"}
 /upload.php    {status=200}    {type="html"}    {tag="type={quote}file{quote}"}
 /upfile.php    {status=200}    {type="html"}    {tag="type={quote}file{quote}"}
 /upload.html   {status=200}    {type="html"}    {tag="type={quote}file{quote}"}
+/upload.cgi    {status=200}    {type="html"}    {tag="type={quote}file{quote}"}
 
 
 # /nagios/         
 # /kibana/  
 
-/jmx-console/HtmlAdaptor       {status=200}
-/cacti/            {tag="Cacti"}
+/jmx-console/HtmlAdaptor       {status=200}   {tag="JBoss Management Console"}
+/cacti/            {tag="<title>Login to Cacti</title>"}
 /zabbix/           {tag="<title>Zabbix</title>"}
 /jira/             {tag="http://www.atlassian.com/software/jira"}
-/jenkins/	         {status=200}    {tag="Dashboard [Jenkins]"}
-/memadmin/index.php      {tag="MemAdmin"}      {status=200}
-/phpmyadmin/index.php    {tag="phpMyAdmin"}    {status=200}
-/_phpmyadmin/index.php   {tag="phpMyAdmin"}    {status=200}
-/pma/index.php           {tag="phpMyAdmin"}    {status=200}
-/pmadmin/index.php       {tag="phpMyAdmin"}    {status=200}
+/jenkins/static/f3a41d2f/css/style.css	         {type="text/css"}        {status=200}    {tag="jenkins-home-link"}
+/static/f3a41d2f/css/style.css                   {type="text/css"}        {status=200}    {tag="jenkins-home-link"}
+/exit                    {status=200}    {tag="<title>POST required</title>"}      
+/memadmin/index.php      {tag="<title>Login - MemAdmin"}      {status=200}
+/phpmyadmin/index.php    {tag="<title>phpMyAdmin"}    {status=200}
+/pma/index.php           {tag="<title>phpMyAdmin"}    {status=200}
+/ganglia/                {status=200}    {tag="<title>Ganglia"}
 
-# /pmyadmin/index.php               {tag="phpMyAdmin"}   {status=200}
-# /pmd/index.php                    {tag="phpMyAdmin"}   {status=200}
-# /php-my-admin/index.php           {tag="phpMyAdmin"}   {status=200}
-# /php-myadmin/index.php            {tag="phpMyAdmin"}   {status=200}
-# /php_my_admin/index.php           {tag="phpMyAdmin"}   {status=200}
-# /phpmyadmin2/index.php       {tag="phpMyAdmin"}    {status=200}
-# /phpmyadmin3/index.php       {tag="phpMyAdmin"}    {status=200}
-# /phpmyadmin2014/index.php    {tag="phpMyAdmin"}    {status=200}
-# /phpmyadmin2015/index.php    {tag="phpMyAdmin"}    {status=200}
+#/_phpmyadmin/index.php             {tag="<title>phpMyAdmin"}    {status=200}
+#/pmadmin/index.php                 {tag="<title>phpMyAdmin"}   {status=200}
+# /pmyadmin/index.php               {tag="<title>phpMyAdmin"}   {status=200}
+# /pmd/index.php                    {tag="<title>phpMyAdmin"}   {status=200}
+# /php-my-admin/index.php           {tag="<title>phpMyAdmin"}   {status=200}
+# /php-myadmin/index.php            {tag="<title>phpMyAdmin"}   {status=200}
+# /php_my_admin/index.php           {tag="<title>phpMyAdmin"}   {status=200}
+# /phpmyadmin2/index.php       {tag="<title>phpMyAdmin"}    {status=200}
+# /phpmyadmin3/index.php       {tag="<title>phpMyAdmin"}    {status=200}
+# /phpmyadmin2014/index.php    {tag="<title>phpMyAdmin"}    {status=200}
+# /phpmyadmin2015/index.php    {tag="<title>phpMyAdmin"}    {status=200}
 
 
 # Discuz
 /config/config_ucenter.php.bak         {status=200}    {tag="<?php"}
+/config/.config_ucenter.php.swp         {status=200}    {tag="<?php"}
+/config/.config_global.php.swp            {status=200}    {tag="<?php"}
 /config/config_global.php.1            {status=200}    {tag="<?php"}
 /uc_server/data/config.inc.php.bak     {status=200}    {tag="<?php"}
 /config/config_global.php.bak          {status=200}    {tag="<?php"}
 /include/config.inc.php.tmp            {status=200}    {tag="<?php"}
-/bbs/.config.inc.php.swp               {status=200}    {tag="<?php"}
 
-/access.log        {status=200}	    {type_no="html"}
-/error.log         {status=200}     {type_no="html"}
-/errors.log        {status=200}     {type_no="html"}
-/debug.log         {status=200}     {type_no="html"}
+# Logs
+/access.log        {status=206}    {type="application/octet-stream"}
+/error.log         {status=206}    {type="application/octet-stream"}
+/log/access.log    {status=206}    {type="application/octet-stream"}
+/log/error.log     {status=206}    {type="application/octet-stream"}
+/log/log.log       {status=206}    {type="application/octet-stream"}
+/logs/error.log         {status=206}    {type="application/octet-stream"}
+/logs/access.log        {status=206}    {type="application/octet-stream"}
+/error.log         {status=206}    {type="application/octet-stream"}
+/errors.log        {status=206}    {type="application/octet-stream"}
+/debug.log         {status=206}    {type="application/octet-stream"}
+/log               {status=206}    {type="application/octet-stream"}
+/logs              {status=206}    {type="application/octet-stream"}
+
+
 /debug.txt         {status=200}     {type="text/plain"}
-/.bash_history     {status=200}     {type_no="html"}
-/.bash_history.php {status=200}     {type_no="html"}   
-/.bashrc           {status=200}     {type_no="html"}
-/.bash_profile     {status=200}     {type_no="html"}
-/.bash_logout      {status=200}     {type_no="html"}
-/.vimrc            {status=200}     {type_no="html"}
-/.DS_Store         {status=200}     {type_no="html"}
-/.history          {status=200}     {type_no="html"}
-/.htaccess         {status=200}     {type_no="html"}
-/htaccess.bak      {status=200}     {type_no="html"}
-/.htpasswd         {status=200}     {type_no="html"}
-/.htpasswd.bak     {status=200}     {type_no="html"}
-/nohup.out         {status=200}     {type_no="html"}
-/.idea/workspace.xml    {status=200}    {tag="xml"}       {type="xml"}
-/.mysql_history         {status=200}    {type_no="html"}
+/debug.out         {status=206}     {type="application/octet-stream"}
+
+/.bash_history     {status=206}     {type="application/octet-stream"}
+/.rediscli_history {status=206}     {type="application/octet-stream"}
+/.bashrc           {status=206}     {type="application/octet-stream"}
+/.bash_profile     {status=206}     {type="application/octet-stream"}
+/.bash_logout      {status=206}     {type="application/octet-stream"}
+/.vimrc            {status=206}     {type="application/octet-stream"}
+/.DS_Store         {status=206}     {type="application/octet-stream"}
+/.history          {status=206}     {type="application/octet-stream"}
+
+
+#/.htaccess         {status=206}     {type="application/octet-stream"}
+#/htaccess.bak      {status=206}     {type="application/octet-stream"}
+
+/.htpasswd         {status=206}     {type="application/octet-stream"}
+/.htpasswd.bak     {status=206}     {type="application/octet-stream"}
+/htpasswd.bak      {status=206}     {type="application/octet-stream"}
+/nohup.out         {status=206}     {type="application/octet-stream"}
+
+/.idea/workspace.xml    {status=200}    {tag="<project version="}       {type="xml"}
+/.mysql_history         {status=206}    {type="application/octet-stream"}
 /httpd.conf             {status=200}    {type_no="html"}
-/Web.config             {status=200}
+/web.config             {status=206}    {type="application/octet-stream"}
 
 
 # webshell
@@ -127,7 +151,7 @@
 
 
 # Resin Doc
-/resin-doc/resource/tutorial/jndi-appconfig/test?inputFile=/etc/passwd    {tag="root:x:"}
+/resin-doc/resource/tutorial/jndi-appconfig/test?inputFile=/etc/profile   {tag="/etc/profile.d/*.sh"}
 /resin-doc/viewfile/?contextpath=/&servletpath=&file=index.jsp            {tag="This is the default start page for the Resin server"}
 
 
@@ -139,42 +163,49 @@
 /.svn/entries         {status=200}    {tag="svn:"}
 /.git/config          {status=200}    {tag="[core]"}
 /.git/index           {status=200}    {tag="DIRC"}
-/.git/HEAD	      {status=200}    {tag="ref:"}
+/.git/HEAD	      {status=200}    {tag="refs/heads/"}
 
 
 # Wordpress
+# /wp-config.php.inc    {status=200}       {tag="<?php"}
 /wp-login.php         {tag="user_login"}  {status=200}
 /wp-config.inc        {status=200}       {tag="<?php"}
 /wp-config.bak        {status=200}       {tag="<?php"}
-/wp-config.php.inc    {status=200}       {tag="<?php"}
 /wp-config.php~       {status=200}       {tag="<?php"}
-/wp-config.php.swp    {status=200}       {tag="<?php"}
+/.wp-config.php.swp   {status=200}       {tag="<?php"}
 /wp-config.php.bak    {status=200}       {tag="<?php"}
 
 
 # SSH
-# /.ssh/known_hosts          {status=200}
+/.ssh/known_hosts          {status=206}      {type="application/octet-stream"}
+/.ssh/known_hosts          {status=206}      {type="application/octet-stream"}
 /.ssh/id_rsa               {status=200}      {tag="PRIVATE KEY-"}
-/id_rsa               {status=200}      {tag="PRIVATE KEY-"}
+/id_rsa                    {status=200}      {tag="PRIVATE KEY-"}
 /.ssh/id_rsa.pub           {status=200}      {tag="ssh-rsa"}
 /.ssh/id_dsa               {status=200}      {tag="PRIVATE KEY-"}
-/id_dsa               {status=200}      {tag="PRIVATE KEY-"}
+/id_dsa                    {status=200}      {tag="PRIVATE KEY-"}
 /.ssh/id_dsa.pub           {status=200}      {tag="ssh-dss"}
 /.ssh/authorized_keys      {status=200}      {tag="ssh-rsa"}
 
 
 /owa/                 {status=302}     {tag="/owa/auth/logon.aspx"}
-
+/ews/		      {status=401}
 
 # Docs
-#/readme               {status=200}
-#/README               {status=200}
-#/readme.html          {status=200}      {type="html"}
-#/changelog.txt        {status=200}      {type="text/plain"}
-#/CHANGELOG.txt        {status=200}      {type="text/plain"}
-#/CHANGELOG.TXT        {status=200}      {type="text/plain"}
-#/info.txt             {status=200}      {type="text/plain"}
-/install.log          {status=200}      {type_no="html"}
+/readme               {status=200}      {type_no="html"}
+/README               {status=200}      {type_no="html"}
+/readme.md            {status=200}      {type_no="html"}
+/readme.html          {status=200}      {type="html"}
+/changelog.txt        {status=200}      {type="text/plain"}
+/data.txt             {status=200}      {type="text/plain"}
+/CHANGELOG.txt        {status=200}      {type="text/plain"}
+/CHANGELOG.TXT        {status=200}      {type="text/plain"}
+
+
+/install.txt          {status=200}      {type="text/plain"}
+/install.log          {status=206}      {type="application/octet-stream"}
+/install.sh           {status=206}
+/deploy.sh            {status=206}
 /install.txt          {status=200}      {type="text/plain"}
 /INSTALL.TXT          {status=200}      {type="text/plain"}
 
@@ -183,36 +214,68 @@
 # /settings.php         {status=200}	{type="html"}
 #/database.csv         {status=200}	{type_no="html"}
 #/fantastico_fileslist.txt    {status=200}     {type_no="html"}
-/config.php           {status=200}     {type="html"}
-/config.inc           {status=200}	   {type_no="html"}
-/config.dat           {status=200}	   {type_no="html"}
+/config.php                  {status=200}     {type="html"}
+/config/config.php           {status=200}     {type="html"}
+/config.inc               {status=200}	   {type_no="html"}
+/config.inc.php           {status=200}	   {type_no="html"}
+/config.inc.php.1         {status=206}	   {type="application/octet-stream"}
+/config.php.bak           {status=206}	   {type="application/octet-stream"}
+/db.php.bak               {status=206}	   {type="application/octet-stream"}
 /conf/config.ini              {status=200}      {type_no="html"}   {tag="["}
 /config.ini                   {status=200}      {type_no="html"}   {tag="["}
 /config/config.ini            {status=200}      {type_no="html"}   {tag="["}
 /configuration.ini            {status=200}      {type_no="html"}   {tag="["}
 /configs/application.ini      {status=200}      {type_no="html"}   {tag="["}
 /settings.ini         {status=200}      {type_no="html"}   {tag="["}
+/application.ini      {status=200}      {type_no="html"}   {tag="["}
 /conf.ini             {status=200}      {type_no="html"}   {tag="["}
+/app.ini              {status=200}      {type_no="html"}   {tag="["}
 /config.json	      {status=200}    {type="application/json"}
 
 
-# /global.asa.bak    {status=200}
-/log               {status=200}      {type_no="html"}
-/logs              {status=200}      {type_no="html"}
 /output            {status=200}      {type_no="html"}
 /a.out             {status=200}      {type_no="html"}
 /test              {status=200}      {type_no="html"}
 /tmp               {status=200}      {type_no="html"}
+/temp              {status=200}      {type_no="html"}
 
 
 /user.txt                    {status=200}    {type="text/plain"}
 /users.txt                   {status=200}    {type="text/plain"}
+/key                     {status=200}    {type_no="html"}
+/keys                    {status=200}    {type_no="html"}
 /key.txt                     {status=200}    {type="text/plain"}
 /keys.txt                    {status=200}    {type="text/plain"}
+/pass.txt                    {status=200}    {type="text/plain"}
 /passwd.txt                  {status=200}    {type="text/plain"}
 /password.txt                {status=200}    {type="text/plain"}
+/pwd.txt                     {status=200}    {type="text/plain"}
 
 /php.ini                     {status=200}    {type_no="html"}  {tag="["}
 /sftp-config.json	     {status=200}    {type="application/json"}   {tag="password"}
-/index.php.bak        {status=200}           {tag="<?php"}
-/index.php.swp        {status=200}           {tag="<?php"}
+
+/index.php.bak        {status=206}      {type="application/octet-stream"}           {tag="<?php"}
+/.index.php.swp       {status=206}      {type="application/octet-stream"}           {tag="<?php"}
+/index.cgi.bak        {status=206}      {type="application/octet-stream"}
+
+/config.inc.php.bak      {status=206}      {type="application/octet-stream"}    {tag="<?php"}
+/.config.inc.php.swp     {status=206}      {type="application/octet-stream"}    {tag="<?php"}
+
+/config/.config.php.swp  {status=200}    {tag="<?php"}
+/.config.php.swp         {status=200}    {tag="<?php"}
+
+
+/{hostname_or_folder}.ini                    {status=206}      {type="application"}   {tag="["}
+/../{hostname_or_folder}.ini                 {status=206}      {type="application"}   {tag="["}
+
+/{hostname_or_folder}.sql                    {status=200}     {type_no="html"}  {tag="CREATE TABLE"}
+/../{hostname_or_folder}.sql                 {status=200}     {type_no="html"}  {tag="CREATE TABLE"}
+
+
+/{hostname_or_folder}.sh                    {status=206}
+/../{hostname_or_folder}.sh                 {status=206}
+
+
+/app.cfg                                    {status=206}
+/setup.sh                                   {status=206}
+

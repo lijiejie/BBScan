@@ -9,8 +9,8 @@
 /WEB-INF/struts-config.xml    {tag="<?xml"}    {status=200}     {type="xml"}
 /WEB-INF/struts-front-config.xml    {tag="<?xml"}    {status=200}     {type="xml"}
 /WEB-INF/struts/struts-config.xml   {tag="<?xml"}    {status=200}     {type="xml"}
-/WEB-INF/classes/              {status=200}
-/WEB-INF/classes/config/       {status=200}
+# /WEB-INF/classes/              {status=200}
+# /WEB-INF/classes/config/       {status=200}
 /WEB-INF/classes/spring.xml    {tag="<?xml"}    {status=200}     {type="xml"}
 /WEB-INF/classes/struts.xml    {tag="<?xml"}    {status=200}     {type="xml"}
 /WEB-INF/classes/struts_manager.xml     {tag="<?xml"}    {status=200}     {type="xml"}
@@ -34,7 +34,8 @@
 /WEB-INF/classes/conf/jdbc.properties     {status=200}    {type_no="html"}
 /WEB-INF/classes/security.properties      {status=200}    {type_no="html"}
 /WEB-INF/conf/database_config.properties  {status=200}    {type_no="html"}
-/WEB-INF/config/dbconfig      {status=200}     {tag="pass"}
+/WEB-INF/config/dbconfig      {status=200}     {tag="passw"}    {type_no="html"}
 /WEB-INF/conf/activemq.xml    {tag="<?xml"}    {type="xml"}
 /server.xml                   {tag="<?xml"}    {type="xml"}
 /config/database.yml          {status=200}    {type_no="html"}
+/configprops                  {status=200}    {tag="serverProperties"}

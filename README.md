@@ -1,4 +1,4 @@
-# BBScan 1.1.0 #
+# BBScan 1.2.0 #
 
 **BBScan** is a tiny **B**atch we**B** vulnerability **Scan**ner.
 
@@ -29,12 +29,12 @@ You can install required packages with pip
 	  --full-scan           Process all sub directories.
 	  -n, --no-crawl        No crawling, sub folders will not be processed.
 	  -nn, --no-check404    No HTTP 404 existence check
-	  -p PROCESS            Num of processes running concurrently, 10 by default
-	  -t THREADS            Num of scan threads for each scan process, 8 by default
+	  -p PROCESS            Num of processes running concurrently, 8 by default
+	  -t THREADS            Num of scan threads for each scan process, 3 by default
 	  --network MASK        Scan all Target/MASK hosts,
 	                        should be an int between 24 and 31
 	  --timeout Timeout     Max scan minutes for each website, 20 by default
-	  --browser             View report with browser after scan finished.
+	  --browser             View report with browser after scan finished
 	  -md                   Save the scan report as markdown format
 	  -v                    show program's version number and exit
 
@@ -46,7 +46,7 @@ You can install required packages with pip
 
 	python BBScan.py  --host www.target.com --network 28 --browser
 	
-**3. Load newline delimetered targets from file and scan**
+**3. Load newline delimited targets from file and scan**
 	
 	python BBScan.py -f wandoujia.com.txt
 

@@ -8,9 +8,7 @@
 
 {text="http://qzone.qq.com/gy/404/data.js"}
 
-{text="您访问的页面不存在"}
-
-{text="您所访问的页面不存在"}
+{text="访问的页面不存在"}
 
 {text="<center><h1>404 Not Found</h1></center>"}
 
@@ -20,7 +18,7 @@
 
 {text="<h1>410 Gone</h1>"}
 
-{text="controller.*not found"}
+{regex_text="controller.*not found"}
 
 {text="<title>404 Page Not Found</title>"}
 
@@ -31,3 +29,11 @@
 {text="<h1>Whoops, looks like something went wrong.</h1>"}
 
 {text="invalid service url:"}
+
+{text="You don't have permission to access this page"}
+
+{text="当前页面不存在或已删除"}
+
+{text="No direct script access allowed"}
+
+{text="args not correct"}

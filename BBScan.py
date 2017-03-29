@@ -21,12 +21,24 @@ import webbrowser
 import socket
 import urllib2
 import sys
-import urllib
+import ssl
+import codecs
+import traceback
+from dns.resolver import Resolver
 from lib.common import get_time, parse_url, decode_response_text
 from lib.cmdline import parse_args
 from lib.report import template
 
-class InfoDisScanner():
+
+# SSL error ignored
+if hasattr(ssl, '_create_unverified_context'):
+    ssl._create_default_https_context = ssl._create_unverified_context
+
+
+socket.setdefaulttimeout(30)
+
+
+class InfoDisScanner(object):
     def __init__(self, timeout=600, args=None):
         self.START_TIME = time.time()
         self.TIME_OUT = timeout
@@ -37,99 +49,130 @@ class InfoDisScanner():
         self._init_rules()
 
         self.url_queue = Queue.Queue()     # all urls to scan
-        self.urls_processed = []           # urls already in queue
-        self.urls_enqueued = []
+        self.urls_processed = set()        # processed urls
+        self.urls_enqueued = set()         # entered queue urls
 
         self.lock = threading.Lock()
-        socket.setdefaulttimeout(20)
 
-
+    # reset scanner
     def init_reset(self):
         self.START_TIME = time.time()
         self.url_queue.queue.clear()
-        self.urls_processed = []           # urls already in queue
-        self.urls_enqueued = []
+        self.urls_processed = set()
+        self.urls_enqueued = set()
         self.results = {}
-        self.file = None
+        self.log_file = None
+        self._404_status = -1
 
-
+    # scan from a given URL
     def init_from_url(self, url):
         self.init_reset()
-        self.url = url
-        if not url.find('://') > 0: self.url = 'http://' + url
+        if not url.find('://') > 0:
+            self.url = 'http://' + url
+        else:
+            self.url = url
         self.schema, self.host, self.path = parse_url(url)
         self.init_final()
 
-
-    def init_from_file(self, log_file):
+    def init_from_log_file(self, log_file):
         self.init_reset()
-        self.file = log_file
+        self.log_file = log_file
         self.schema, self.host, self.path = self._parse_url_from_file()
         self.load_all_urls_from_file()
         self.init_final()
 
-
+    #
     def init_final(self):
-        self.max_depth = self._cal_depth(self.path)[1] + 3     # max depth to scan
+        if not self.is_port_open():
+            return
+        self.max_depth = self._cal_depth(self.path)[1] + 5
         if self.args.no_check404:
             self._404_status = 404
             self.has_404 = True
         else:
             self.check_404()           # check existence of HTTP 404
-            if self._404_status == -1:
-                return
         if not self.has_404:
             print '[%s] [Warning] %s has no HTTP 404.' % (get_time(), self.host)
         _path, _depth = self._cal_depth(self.path)
         self._enqueue('/')
         self._enqueue(_path)
-        if not self.args.no_crawl and not self.file:
+        if not self.args.no_crawl and not self.log_file:
             self.crawl_index(_path)
 
-
-    def _parse_url_from_file(self):
-        with open(self.file) as inFile:
-            line = inFile.readline().strip()
-            if line:
-                url = line.split()[1]
+    def is_port_open(self):
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.settimeout(5.0)
+            default_port = 443 if self.schema.lower() == 'https' else 80
+            host, port = self.host.split(':') if self.host.find(':') > 0 else (self.host, default_port)
+            if s.connect_ex((host, int(port))) == 0:
+                print '[%s] Scan %s' % (get_time(), self.host)
+                return True
             else:
-                url = ''
-            return parse_url(url)
+                print '[%s] Fail to connect to %s' % (get_time(), self.host)
+                return False
+            s.close()
+        except Exception, e:
+            return False
+        finally:
+            s.close()
 
+    #
+    def _parse_url_from_file(self):
+        url = ''
+        with open(self.log_file) as infile:
+            for line in infile.xreadlines():
+                line = line.strip()
+                if line and len(line.split()) >= 2:
+                    url = line.split()[1]
+                    break
+        return parse_url(url)
 
+    # calculate depth of a given URL, return tuple (url, depth)
     def _cal_depth(self, url):
-        # calculate depth of a given URL, return tuple (url, depth)
-        if url.find('#') >= 0: url = url[:url.find('#')]    # cut off fragment
-        if url.find('?') >= 0: url = url[:url.find('?')]    # cut off query string
-        if url.startswith('//'):
-            return '', 10000    # //www.baidu.com/index.php, ignored
-        if not urlparse.urlparse(url, 'http').scheme.startswith('http'):
-            return '', 10000    # no HTTP protocol, ignored
+        if url.find('#') >= 0:
+            url = url[:url.find('#')]    # cut off fragment
+        if url.find('?') >= 0:
+            url = url[:url.find('?')]    # cut off query string
 
-        if url.startswith('http'):
+        if url.startswith('//'):
+            return '', 10000    # //www.baidu.com/index.php
+
+        if not urlparse.urlparse(url, 'http').scheme.startswith('http'):
+            return '', 10000    # no HTTP protocol
+
+        if url.lower().startswith('http'):
             _ = urlparse.urlparse(url, 'http')
             if _.netloc == self.host:    # same hostname
                 url = _.path
             else:
-                return '', 10000         # not same hostname, ignored
+                return '', 10000         # not the same hostname
+
         while url.find('//') >= 0:
             url = url.replace('//', '/')
 
         if not url:
             return '/', 1         # http://www.example.com
 
-        if url[0] != '/': url = '/' + url
+        if url[0] != '/':
+            url = '/' + url
+
         url = url[: url.rfind('/')+1]
+
+        if url.split('/')[-2].find('.') > 0:
+            url = '/'.join(url.split('/')[:-2]) + '/'
+
         depth = url.count('/')
         return url, depth
 
-
+    #
+    # load urls from rules/*.txt
     def _init_rules(self):
         self.text_to_find = []
         self.regex_to_find = []
         self.text_to_exclude = []
         self.regex_to_exclude = []
-        self.rules_dict = []
+        self.rules_set = set()
 
         p_tag = re.compile('{tag="([^"]+)"}')
         p_status = re.compile('{status=(\d{3})}')
@@ -137,22 +180,28 @@ class InfoDisScanner():
         p_content_type_no = re.compile('{type_no="([^"]+)"}')
 
         for rule_file in glob.glob('rules/*.txt'):
-            infile = open(rule_file, 'r')
-            for url in infile.xreadlines():
-                url = url.strip()
-                if url.startswith('/'):
-                    _ = p_tag.search(url); tag = _.group(1).replace("{quote}", '"') if _ else ''
-                    _ = p_status.search(url); status = int(_.group(1)) if _ else 0
-                    _ = p_content_type.search(url); content_type = _.group(1) if _ else ''
-                    _ = p_content_type_no.search(url); content_type_no = _.group(1) if _ else ''
-                    url = urllib.unquote(url.split()[0])
-                    rule = (url, tag, status, content_type, content_type_no)
-                    if not rule in self.rules_dict:
-                        self.rules_dict.append(rule)
-            infile.close()
+            with open(rule_file, 'r') as infile:
+                for url in infile.xreadlines():
+                    url = url.strip()
+                    if url.startswith('/'):
+                        _ = p_tag.search(url)
+                        tag = _.group(1).replace("{quote}", '"') if _ else ''
 
-        _re = re.compile('{text="(.*)"}')
-        _re2 = re.compile('{regex_text="(.*)"}')
+                        _ = p_status.search(url)
+                        status = int(_.group(1)) if _ else 0
+
+                        _ = p_content_type.search(url)
+                        content_type = _.group(1) if _ else ''
+
+                        _ = p_content_type_no.search(url)
+                        content_type_no = _.group(1) if _ else ''
+
+                        rule = (url.split()[0], tag, status, content_type, content_type_no)
+                        if rule not in self.rules_set:
+                            self.rules_set.add(rule)
+
+        re_text = re.compile('{text="(.*)"}')
+        re_regex_text = re.compile('{regex_text="(.*)"}')
 
         _file_path = 'rules/white.list'
         if not os.path.exists(_file_path):
@@ -161,106 +210,92 @@ class InfoDisScanner():
             line = line.strip()
             if not line or line.startswith('#'):
                 continue
-            _m = _re.search(line)
+            _m = re_text.search(line)
             if _m:
-                self.text_to_find.append( _m.group(1).decode('utf-8', 'ignore') )
+                self.text_to_find.append(
+                    _m.group(1).decode('utf-8', 'ignore')
+                )
             else:
-                _m = _re2.search(line)
+                _m = re_regex_text.search(line)
                 if _m:
-                    self.regex_to_find.append( re.compile(_m.group(1).decode('utf-8','ignore')) )
+                    self.regex_to_find.append(
+                        re.compile(_m.group(1).decode('utf-8', 'ignore'))
+                    )
 
         _file_path = 'rules/black.list'
         if not os.path.exists(_file_path):
             return
         for line in open(_file_path):
             line = line.strip()
-            if not line or line.startswith('#'): continue
-            _m = _re.search(line)
+            if not line or line.startswith('#'):
+                continue
+            _m = re_text.search(line)
             if _m:
-                self.text_to_exclude.append( _m.group(1).decode('utf-8', 'ignore') )
+                self.text_to_exclude.append(
+                    _m.group(1).decode('utf-8', 'ignore')
+                )
             else:
-                _m = _re2.search(line)
+                _m = re_regex_text.search(line)
                 if _m:
-                    self.regex_to_exclude.append( re.compile(_m.group(1).decode('utf-8', 'ignore')) )
+                    self.regex_to_exclude.append(
+                        re.compile(_m.group(1).decode('utf-8', 'ignore'))
+                    )
 
-
-    def _http_request(self, url, timeout=10):
+    #
+    def _http_request(self, url, timeout=20):
         try:
-            if not url: url = '/'
+            if not url:
+                url = '/'
+
             conn_fuc = httplib.HTTPSConnection if self.schema == 'https' else httplib.HTTPConnection
             conn = conn_fuc(self.host, timeout=timeout)
 
             conn.request(method='GET', url=url,
                          headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 '
-                                                '(KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36 BBScan/1.1',
-                                  'Range': 'bytes=0-10240',
+                                                '(KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36 BBScan/1.2',
+                                  'Range': 'bytes=0-2048',
                                   'Connection': 'Close'})
             resp = conn.getresponse()
             resp_headers = dict(resp.getheaders())
             status = resp.status
-            if resp_headers.get('content-type', '').find('text') >= 0 or \
-                            resp_headers.get('content-type', '').find('html') >= 0 or \
-                            int(resp_headers.get('content-length', '0')) <= 307200:    # 1024 * 300
+            if resp_headers.get('content-type', '').find('text') >= 0 \
+                    or resp_headers.get('content-type', '').find('html') >= 0 \
+                    or int(resp_headers.get('content-length', '0')) <= 20480:    # 1024 * 20
                 html_doc = decode_response_text(resp.read())
             else:
                 html_doc = ''
             conn.close()
             return status, resp_headers, html_doc
-        except Exception, e:
+        except:
             return -1, {}, ''
         finally:
             conn.close()
 
-
-    def get_status(self, url):
-        return self._http_request(url)[0]
-
-    def get_title(sefl, html_doc):
-        try:
-            soup = BeautifulSoup(html_doc,'lxml')
-            return soup.title.string.encode('utf-8').strip()
-        except:
-            return ""
-
+    #
     def check_404(self):
         try:
             try:
-                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                s.settimeout(5.0)
-                default_port = 443 if self.schema.lower() == 'https' else 80
-                host, port = self.host.split(':') if self.host.find(':') > 0 else (self.host, default_port)
-                if s.connect_ex((host, int(port))) == 0:
-                    s.close()
-                    self._404_status, headers, html_doc = \
-                        self._http_request('/bbscan_wants__your_response.php')
-                else:
-                    self._404_status, headers, html_doc = -1, {}, ''
+                self._404_status, headers, html_doc = self._http_request('/BBScan-404-existence-check')
             except:
                 self._404_status, headers, html_doc = -1, {}, ''
-            finally:
-                s.close()
 
-            if self._404_status == -1:
-                print '[%s] [ERROR] Fail to connect to %s' % (get_time(), self.host)
             self.has_404 = (self._404_status == 404)
             if not self.has_404:
                 self.len_404_doc = len(html_doc)
             return self.has_404
         except Exception, e:
-            logging.error("[Check_404] Exception %s" % e)
+            logging.error('[Check_404] Exception %s' % str(e))
 
-
+    #
     def _enqueue(self, url):
         url = str(url)
-        _url = re.sub('\d+', '{num}', url)
-        if _url in self.urls_processed:
-            return False
-        elif len(self.urls_processed) >= self.LINKS_LIMIT:
+        url_pattern = re.sub('\d+', '{num}', url)
+        if url_pattern in self.urls_processed or len(self.urls_processed) >= self.LINKS_LIMIT:
             return False
         else:
-            self.urls_processed.append(_url)
-
-        for _ in self.rules_dict:
+            self.urls_processed.add(url_pattern)
+        # print url
+        for _ in self.rules_set:
             try:
                 full_url = url.rstrip('/') + _[0]
             except:
@@ -270,63 +305,64 @@ class InfoDisScanner():
             url_description = {'prefix': url.rstrip('/'), 'full_url': full_url}
             item = (url_description, _[1], _[2], _[3], _[4])
             self.url_queue.put(item)
-            self.urls_enqueued.append(full_url)
+            self.urls_enqueued.add(full_url)
 
-        if self.full_scan and url.count('/') > 3:
-            self._enqueue('/'.join(url.split('/')[:-2]) + '/')
+        if self.full_scan and url.count('/') >= 3:
+            self._enqueue('/'.join(url.split('/')[:-2]) + '/')    # sub folder enqueue
 
         return True
 
-
+    #
     def crawl_index(self, path):
         try:
             status, headers, html_doc = self._http_request(path)
             if status != 200:
                 try:
                     html_doc = decode_response_text(urllib2.urlopen(self.url).read())
-                except Exception,e :
+                except Exception, e:
                     pass
             soup = BeautifulSoup(html_doc, "html.parser")
-            links = soup.find_all('a')
-            for l in links:
-                url = l.get('href', '').strip()
+            for link in soup.find_all('a'):
+                url = link.get('href', '').strip()
                 url, depth = self._cal_depth(url)
                 if depth <= self.max_depth:
                     self._enqueue(url)
+            if self.find_text(html_doc):
+                    self.results['/'] = []
+                    m = re.search('<title>(.*?)</title>', html_doc)
+                    title = m.group(1) if m else ''
+                    _ = {'status': status, 'url': '%s://%s%s' % (self.schema, self.host, path), 'title': title}
+                    if _ not in self.results['/']:
+                        self.results['/'].append(_)
+
         except Exception, e:
-            logging.error('[crawl_index Exception] %s' % e)
-            import traceback
+            logging.error('[crawl_index Exception] %s' % str(e))
             traceback.print_exc()
 
-
+    #
     def load_all_urls_from_file(self):
         try:
-            with open(self.file) as inFile:
-                lines = inFile.readlines()
-            for line in lines:
-                _ = line.split()
-                if len(_) == 3 and (_[2].find('^^^200') > 0 or _[2].find('^^^403') > 0):
-                    url = urlparse.unquote(_[1])
-                    url, depth = self._cal_depth(url)
-                    if len(url) >= 70: continue
-                    #print url
-                    self._enqueue(url)
+            with open(self.log_file) as inFile:
+                for line in inFile.xreadlines():
+                    _ = line.strip().split()
+                    if len(_) == 3 and (_[2].find('^^^200') > 0 or _[2].find('^^^403') > 0 or _[2].find('^^^302') > 0):
+                        url, depth = self._cal_depth(url)
+                        self._enqueue(url)
         except Exception, e:
-            logging.error('[load_all_urls_from_file Exception] %s' % e)
-            import traceback
+            logging.error('[load_all_urls_from_file Exception] %s' % str(e))
             traceback.print_exc()
 
-
+    #
     def find_text(self, html_doc):
         for _text in self.text_to_find:
             if html_doc.find(_text) > 0:
                 return True
         for _regex in self.regex_to_find:
             if _regex.search(html_doc) > 0:
-                return  True
+                return True
         return False
 
-
+    #
     def exclude_text(self, html_doc):
         for _text in self.text_to_exclude:
             if html_doc.find(_text) > 0:
@@ -336,10 +372,11 @@ class InfoDisScanner():
                 return False
         return True
 
-
+    #
     def _scan_worker(self):
         while self.url_queue.qsize() > 0:
             if time.time() - self.START_TIME > self.TIME_OUT:
+                self.url_queue.queue.clear()
                 print '[%s] [ERROR] Timed out task: %s' % (get_time(), self.host)
                 return
             try:
@@ -348,49 +385,52 @@ class InfoDisScanner():
                 return
             try:
                 url_description, tag, code, content_type, content_type_no = item
+                prefix = url_description['prefix']
                 url = url_description['full_url']
                 url = url.replace('{sub}', self.host.split('.')[0])
-                prefix = url_description['prefix']
                 if url.find('{hostname_or_folder}') >= 0:
                     _url = url[: url.find('{hostname_or_folder}')]
-                    if _url.count('/') == 1:
-                        url = url.replace('{hostname_or_folder}', self.host)
-                    elif _url.count('/') > 1:
-                        url = url.replace('{hostname_or_folder}', _url.split('/')[-2])
-                url = url.replace('{hostname}', self.host)
+                    folders = _url.split('/')
+                    for _folder in reversed(folders):
+                        if _folder not in ['', '.', '..']:
+                            url = url.replace('{hostname_or_folder}', _folder)
+                            break
+                url = url.replace('{hostname_or_folder}', self.host.split(':')[0])
+                url = url.replace('{hostname}', self.host.split(':')[0])
                 if url.find('{parent}') > 0:
-                    if url.count('/') >= 2:
-                        ret = url.split('/')
-                        ret[-2] = ret[-1].replace('{parent}', ret[-2])
-                        url =  '/' + '/'.join(ret[:-1])
-                    else:
+                    if url.count('/') < 2:
                         continue
+                    ret = url.split('/')
+                    ret[-2] = ret[-1].replace('{parent}', ret[-2])
+                    url = '/' + '/'.join(ret[:-1])
+
             except Exception, e:
-                logging.error('[_scan_worker Exception 1] %s' % e)
+                logging.error('[_scan_worker Exception] [1] %s' % str(e))
                 continue
             if not item or not url:
                 break
 
-            #print '[%s]' % url.strip()
+            # print '[%s]' % url.strip()
             try:
                 status, headers, html_doc = self._http_request(url)
+                cur_content_type = headers.get('content-type', '')
 
-                if headers.get('content-type', '').find('image/') >= 0:    # exclude image type
+                if cur_content_type.find('image/') >= 0:    # exclude image type
                     continue
 
-                if html_doc.strip() == '' or len(html_doc) < 10:    # data too short
+                if len(html_doc) < 10:    # data too short
                     continue
 
                 if not self.exclude_text(html_doc):    # exclude text found
                     continue
 
                 valid_item = False
-                if status == 200 and  self.find_text(html_doc):
+                if self.find_text(html_doc):
                     valid_item = True
                 else:
-                    if status in [400, 404, 503, 502, 301, 302]:
+                    if status != code and status in [301, 302, 400, 404, 500, 501, 502, 503, 505]:
                         continue
-                    if  headers.get('content-type', '').find('application/json') >= 0 and \
+                    if cur_content_type.find('application/json') >= 0 and \
                             not url.endswith('.json'):    # no json
                         continue
 
@@ -400,55 +440,53 @@ class InfoDisScanner():
                         else:
                             continue    # tag mismatch
 
-                    if content_type and headers.get('content-type', '').find(content_type) < 0 or \
-                        content_type_no and headers.get('content-type', '').find(content_type_no) >=0:
+                    if content_type and cur_content_type.find(content_type) < 0 \
+                            or content_type_no and cur_content_type.find(content_type_no) >= 0:
                         continue    # type mismatch
 
-                    if self.has_404 or status!=self._404_status:
+                    if self.has_404 or status != self._404_status:
                         if code and status != code and status != 206:    # code mismatch
                             continue
-                        elif code!= 403 and status == 403:
+                        elif code != 403 and status == 403:
                             continue
                         else:
                             valid_item = True
 
-                    if (not self.has_404) and status in (200, 206) and item[0]['full_url'] != '/' and (not tag):
+                    if not self.has_404 and status in (200, 206) and url != '/' and not tag:
                         _len = len(html_doc)
                         _min = min(_len, self.len_404_doc)
                         if _min == 0:
-                            _min = 10
-                        if abs(_len - self.len_404_doc) / _min  > 0.3:
+                            _min = 10.0
+                        if float(_len - self.len_404_doc) / _min > 0.3:
                             valid_item = True
 
                     if status == 206:
-                        if headers.get('content-type', '').find('text') < 0 and headers.get('content-type', '').find('html') < 0:
+                        if cur_content_type.find('text') < 0 and cur_content_type.find('html') < 0:
                             valid_item = True
-                        else:
-                            continue
 
                 if valid_item:
                     self.lock.acquire()
                     # print '[+] [Prefix:%s] [%s] %s' % (prefix, status, 'http://' + self.host +  url)
-                    if not prefix in self.results:
-                        self.results[prefix]= []
-                    _ = {'status': status, 'url': '%s://%s%s' % (self.schema, self.host, url),'title':self.get_title(html_doc)}
+                    if prefix not in self.results:
+                        self.results[prefix] = []
+                    m = re.search('<title>(.*?)</title>', html_doc)
+                    title = m.group(1) if m else ''
+
+                    _ = {'status': status, 'url': '%s://%s%s' % (self.schema, self.host, url), 'title': title}
                     if _ not in self.results[prefix]:
                         self.results[prefix].append(_)
                     self.lock.release()
 
                 if len(self.results) >= 10:
-                    print 'More than 10 vulnerabilities found for [%s], seems to be false positives, exit.' % prefix
-                    return
+                    print '[ERROR] Over 10 vulnerabilities found [%s], seems to be false positives.' % prefix
+                    self.url_queue.queue.clear()
             except Exception, e:
-                logging.error('[InfoDisScanner._scan_worker][2][%s] Exception %s' % (url, e))
-                import traceback
+                logging.error('[_scan_worker.Exception][2][%s] %s' % (url, str(e)))
                 traceback.print_exc()
 
-
-    def scan(self, threads=10):
+    #
+    def scan(self, threads=6):
         try:
-            if self._404_status == -1:
-                return self.host, {}
             threads_list = []
             for i in range(threads):
                 t = threading.Thread(target=self._scan_worker)
@@ -457,41 +495,40 @@ class InfoDisScanner():
             for t in threads_list:
                 t.join()
             for key in self.results.keys():
-                if len(self.results[key]) > 10:    # more than 20 URLs found under folder: false positives
+                if len(self.results[key]) > 10:    # Over 10 URLs found under this folder: false positives
                     del self.results[key]
             return self.host, self.results
         except Exception, e:
-            print '[InfoDisScanner.scan exception] %s' % e
+            print '[scan exception] %s' % str(e)
 
 
 def batch_scan(q_targets, q_results, lock, args):
         s = InfoDisScanner(args.timeout*60, args=args)
         while True:
             try:
-                target = q_targets.get(timeout=0.1)
+                target = q_targets.get(timeout=1.0)
             except:
                 break
             _url = target['url']
             _file = target['file']
 
-            #lock.acquire()
-            print '[%s] Scan %s' % (get_time(), _url if _url else os.path.basename(_file).rstrip('.log') )
-            #lock.release()
             if _url:
                 s.init_from_url(_url)
             else:
-                if os.path.getsize(_file) > 0:
-                    s.init_from_file(_file)
-                    if s.host == '':
-                        continue
-                else:
+                if os.path.getsize(_file) == 0:
                     continue
+                s.init_from_log_file(_file)
+                if s.host == '':
+                    continue
+
             host, results = s.scan(threads=args.t)
             if results:
-                q_results.put( (host, results) )
+                q_results.put((host, results))
+                lock.acquire()
                 for key in results.keys():
                     for url in results[key]:
-                        print  '[+] [%s] %s' % (url['status'], url['url'])
+                        print '[+] [%s] %s' % (url['status'], url['url'])
+                lock.release()
 
 
 def save_report_thread(q_results, file):
@@ -505,43 +542,42 @@ def save_report_thread(q_results, file):
         t_host = Template(a_template['host'])
         t_list_item = Template(a_template['list_item'])
         output_file_suffix = a_template['suffix']
-        
 
         all_results = []
-        
-        report_name = os.path.basename(file).lower().replace('.txt', '') + '_' + \
-                      time.strftime('%Y%m%d_%H%M%S', time.localtime()) + output_file_suffix 
-        
-        last_qsize = 0
+        report_name = os.path.basename(file).lower().replace('.txt', '') \
+            + '_' + time.strftime('%Y%m%d_%H%M%S', time.localtime()) + output_file_suffix
+
         global STOP_ME
         try:
-            while not (STOP_ME and q_results.qsize() == 0):
-                if q_results.qsize() == last_qsize:
-                    time.sleep(1.0)
+            while not STOP_ME:
+                if q_results.qsize() == 0:
+                    time.sleep(0.1)
                     continue
-                else:
-                    last_qsize = q_results.qsize()
+
                 html_doc = ""
                 while q_results.qsize() > 0:
                     all_results.append(q_results.get())
+
                 for item in all_results:
                     host, results = item
                     _str = ""
                     for key in results.keys():
                         for _ in results[key]:
-                            _str += t_list_item.substitute( {'status': _['status'], 'url': _['url'],'title':_['title']} )
+                            _str += t_list_item.substitute(
+                                {'status': _['status'], 'url': _['url'], 'title': _['title']}
+                            )
                     _str = t_host.substitute({'host': host, 'list': _str})
                     html_doc += _str
 
-                if all_results:
-                    cost_time = time.time() - start_time
-                    cost_min = int(cost_time / 60)
-                    cost_seconds = '%.2f' % (cost_time % 60)
-                    html_doc = t_general.substitute({'cost_min': cost_min, 'cost_seconds': cost_seconds, 'content': html_doc})
+                cost_time = time.time() - start_time
+                cost_min = int(cost_time / 60)
+                cost_seconds = '%.2f' % (cost_time % 60)
+                html_doc = t_general.substitute(
+                    {'cost_min': cost_min, 'cost_seconds': cost_seconds, 'content': html_doc}
+                )
 
-                    with open('report/%s' % report_name, 'w') as outFile:
-                        outFile.write(html_doc)
-
+                with codecs.open('report/%s' % report_name, 'w', encoding='utf-8') as outFile:
+                    outFile.write(html_doc)
 
             if all_results:
                 print '[%s] Scan report saved to report/%s' % (get_time(), report_name)
@@ -551,11 +587,36 @@ def save_report_thread(q_results, file):
                 lock.acquire()
                 print '[%s] No vulnerabilities found on sites in %s.' % (get_time(), file)
                 lock.release()
-        except IOError, e:
-            sys.exit(-1)
+
         except Exception, e:
-            print '[save_report_thread Exception] %s %s' % ( type(e) , str(e))
+            print '[save_report_thread Exception] %s %s' % (type(e), str(e))
             sys.exit(-1)
+
+
+def domain_lookup():
+    r = Resolver()
+    r.timeout = r.lifetime = 8.0
+    while True:
+        try:
+            host = q_hosts.get(timeout=0.1)
+        except:
+            break
+        _schema, _host, _path = parse_url(host)
+        try:
+            m = re.search('\d+\.\d+\.\d+\.\d+', _host.split(':')[0])
+            if m:
+                q_targets.put({'file': '', 'url': host})
+                ips_to_scan.append(m.group(0))
+            else:
+                answers = r.query(_host.split(':')[0])
+                if answers:
+                    q_targets.put({'file': '', 'url': host})
+                    for _ in answers:
+                        ips_to_scan.append(_.address)
+        except Exception, e:
+            lock.acquire()
+            print '[Warning] Invalid domain:', host
+            lock.release()
 
 
 if __name__ == '__main__':
@@ -570,7 +631,7 @@ if __name__ == '__main__':
     elif args.host:
         input_files = ['hosts']    # several hosts on command line
 
-    scanned_ips = []    # all scanned IPs in current scan
+    ips_to_scan = []    # all IPs to be scanned during current scan
 
     for file in input_files:
         if args.host:
@@ -583,8 +644,8 @@ if __name__ == '__main__':
             q_results = multiprocessing.Manager().Queue()
             q_targets = multiprocessing.Manager().Queue()
             lock = multiprocessing.Manager().Lock()
-
             STOP_ME = False
+
             threading.Thread(target=save_report_thread, args=(q_results, file)).start()
             print '[%s] Report thread created, prepare target Queue...' % get_time()
 
@@ -594,54 +655,60 @@ if __name__ == '__main__':
                     q_targets.put({'file': _file, 'url': ''})
 
             if args.host or args.f or args.d:
+                q_hosts = Queue.Queue()
                 for line in lines:
                     if line.strip():
-                        hosts = line.strip().split()
+                        # Works with https://github.com/lijiejie/subDomainsBrute
+                        # delimiter "," is acceptable
+                        hosts = line.replace(',', ' ').strip().split()
                         for host in hosts:
-                            host = host.strip(',')    # Work with https://github.com/lijiejie/subDomainsBrute
-                            _schema, _host, _path = parse_url(host)
-                            try:
-                                ip = socket.gethostbyname(_host.split(':')[0])
-                                if ip:
-                                    scanned_ips.append(ip)
-                                    q_targets.put({'file': '', 'url': host})
-                            except Exception, e:
-                                pass
+                            q_hosts.put(host)
+
+                all_threads = []
+                for _ in range(20):
+                    t = threading.Thread(target=domain_lookup)
+                    all_threads.append(t)
+                    t.start()
+                for t in all_threads:
+                    t.join()
 
                 if args.network != 32:
-                    for ip in scanned_ips:
+                    for ip in ips_to_scan:
                         if ip.find('/') > 0:
                             continue
-                        _network = u'%s/%s' % ('.'.join( ip.split('.')[:3] ), args.network)
-                        if _network in scanned_ips:
+                        _network = u'%s/%s' % ('.'.join(ip.split('.')[:3]), args.network)
+                        if _network in ips_to_scan:
                             continue
+                        ips_to_scan.append(_network)
                         _ips = ipaddress.IPv4Network(u'%s/%s' % (ip, args.network), strict=False).hosts()
                         for _ip in _ips:
                             _ip = str(_ip)
-                            if _ip not in scanned_ips:
-                                scanned_ips.append(_ip)
-                                #pool.apply_async(func=batch_scan, args=(_ip, q_results, lock, args, None) ).get(timeout=1)
+                            if _ip not in ips_to_scan:
+                                ips_to_scan.append(_ip)
                                 q_targets.put({'file': '', 'url': _ip})
-                        scanned_ips.append(_network)
+
             print '[%s] %s targets entered Queue.' % (get_time(), q_targets.qsize())
             print '[%s] Create %s sub Processes...' % (get_time(), args.p)
-
             scan_process = []
             for _ in range(args.p):
                 p = multiprocessing.Process(target=batch_scan, args=(q_targets, q_results, lock, args))
                 p.daemon = True
                 p.start()
                 scan_process.append(p)
-            print '[%s] %s sub process successfully created.' % (get_time(), args.p )
+            print '[%s] %s sub process successfully created.' % (get_time(), args.p)
             for p in scan_process:
                 p.join()
 
         except KeyboardInterrupt, e:
+            print '[+] [%s] User aborted, running tasks crashed.' % get_time()
+            try:
+                while True:
+                    q_targets.get_nowait()
+            except:
+                pass
 
-            print '[+] [%s] User aborted.' % get_time()
-            sys.exit(-1)
-        except:
-            sys.exit(-1)
+        except Exception, e:
+            print '[__main__.exception] %s %s' % (type(e), str(e))
+            traceback.print_exc()
 
         STOP_ME = True
-

@@ -1,8 +1,7 @@
 ﻿# text to search in doc
 # regex can be used
 
-# 匹配的条目将被立即标记 命中
-
+# 匹配的条目将被立即标记命中
 
 
 {text="<title>phpMyAdmin</title>"}
@@ -15,7 +14,9 @@
 
 # {text="Apache Tomcat"}
 
-{text="Cacti"}
+{text="request_uri"}
+
+{text="<title>Login to Cacti</title>"}
 
 {text="<title>Zabbix</title>"}
 
@@ -36,6 +37,8 @@
 {text="You have an error in your SQL syntax"}
 
 {text="</b> on line <b>"}
+
+{text="The proxy server could not handle the request"}
 
 {regex_text="<title>.*后台.*</title>"}
 

