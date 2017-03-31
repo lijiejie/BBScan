@@ -1,12 +1,12 @@
-# BBScan 1.2.0 #
+# BBScan 1.2.1 #
 
 **BBScan** is a tiny **B**atch we**B** vulnerability **Scan**ner.
 
-
 ## Requirements ##
-* BeautifulSoup4==4.3.2
-* py2-ipaddress==3.4.1
-* dnspython==1.15.0
+* BeautifulSoup4>=4.3.2
+* py2-ipaddress>=3.4.1
+* dnspython>=1.15.0
+* requests>=2.11.1
 
 You can install required packages with pip
 
@@ -69,7 +69,7 @@ crawler log files should be formarted first:
 
 BBScan是一个迷你的信息泄漏批量扫描脚本。 可以通过文本批量导入主机或URL，以换行符分割。
 	
-`--crawler` 参数是v1.1新增的，可以导入爬虫日志发起扫描。 日志的格式，我们约定如下：
+`--crawler` 参数是`v1.1`新增的，可以导入爬虫日志发起扫描。 日志的格式，我们约定如下：
 
 			Request Line + 三个尖括号 + [POST请求body] + 三个尖括号 + HTTP状态码
 示例如下：

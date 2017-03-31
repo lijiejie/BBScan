@@ -5,7 +5,7 @@
 
 
 import urlparse
-import httplib
+import requests
 import logging
 import re
 import threading
@@ -19,13 +19,12 @@ import ipaddress
 import os
 import webbrowser
 import socket
-import urllib2
 import sys
 import ssl
 import codecs
 import traceback
 from dns.resolver import Resolver
-from lib.common import get_time, parse_url, decode_response_text
+from lib.common import get_time, parse_url
 from lib.cmdline import parse_args
 from lib.report import template
 
@@ -85,7 +84,9 @@ class InfoDisScanner(object):
     def init_final(self):
         if not self.is_port_open():
             return
+        self.base_url = '%s://%s' % (self.schema, self.host)
         self.max_depth = self._cal_depth(self.path)[1] + 5
+        self.session = requests.session()
         if self.args.no_check404:
             self._404_status = 404
             self.has_404 = True
@@ -102,7 +103,7 @@ class InfoDisScanner(object):
     def is_port_open(self):
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.settimeout(5.0)
+            s.settimeout(4.0)
             default_port = 443 if self.schema.lower() == 'https' else 80
             host, port = self.host.split(':') if self.host.find(':') > 0 else (self.host, default_port)
             if s.connect_ex((host, int(port))) == 0:
@@ -246,30 +247,24 @@ class InfoDisScanner(object):
         try:
             if not url:
                 url = '/'
-
-            conn_fuc = httplib.HTTPSConnection if self.schema == 'https' else httplib.HTTPConnection
-            conn = conn_fuc(self.host, timeout=timeout)
-
-            conn.request(method='GET', url=url,
-                         headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 '
-                                                '(KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36 BBScan/1.2',
-                                  'Range': 'bytes=0-2048',
-                                  'Connection': 'Close'})
-            resp = conn.getresponse()
-            resp_headers = dict(resp.getheaders())
-            status = resp.status
+            url = self.base_url + url
+            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 '
+                                     '(KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36 BBScan/1.2',
+                       'Range': 'bytes=0-10240',
+                       'Connection': 'keep-alive'
+                       }
+            resp = self.session.get(url, headers=headers, timeout=(3.0, timeout))
+            resp_headers = resp.headers
+            status = resp.status_code
             if resp_headers.get('content-type', '').find('text') >= 0 \
                     or resp_headers.get('content-type', '').find('html') >= 0 \
-                    or int(resp_headers.get('content-length', '0')) <= 20480:    # 1024 * 20
-                html_doc = decode_response_text(resp.read())
+                    or int(resp_headers.get('content-length', '0')) <= 10240:
+                html_doc = resp.text
             else:
                 html_doc = ''
-            conn.close()
             return status, resp_headers, html_doc
         except:
             return -1, {}, ''
-        finally:
-            conn.close()
 
     #
     def check_404(self):
@@ -318,7 +313,7 @@ class InfoDisScanner(object):
             status, headers, html_doc = self._http_request(path)
             if status != 200:
                 try:
-                    html_doc = decode_response_text(urllib2.urlopen(self.url).read())
+                    html_doc = self.session.get(self.url, headers={'Connection': 'close'}).text
                 except Exception, e:
                     pass
             soup = BeautifulSoup(html_doc, "html.parser")
@@ -331,7 +326,7 @@ class InfoDisScanner(object):
                     self.results['/'] = []
                     m = re.search('<title>(.*?)</title>', html_doc)
                     title = m.group(1) if m else ''
-                    _ = {'status': status, 'url': '%s://%s%s' % (self.schema, self.host, path), 'title': title}
+                    _ = {'status': status, 'url': '%s%s' % (self.base_url, path), 'title': title}
                     if _ not in self.results['/']:
                         self.results['/'].append(_)
 
@@ -472,7 +467,7 @@ class InfoDisScanner(object):
                     m = re.search('<title>(.*?)</title>', html_doc)
                     title = m.group(1) if m else ''
 
-                    _ = {'status': status, 'url': '%s://%s%s' % (self.schema, self.host, url), 'title': title}
+                    _ = {'status': status, 'url': '%s%s' % (self.base_url, url), 'title': title}
                     if _ not in self.results[prefix]:
                         self.results[prefix].append(_)
                     self.lock.release()
@@ -500,6 +495,8 @@ class InfoDisScanner(object):
             return self.host, self.results
         except Exception, e:
             print '[scan exception] %s' % str(e)
+        finally:
+            self.session.close()
 
 
 def batch_scan(q_targets, q_results, lock, args):
@@ -615,7 +612,7 @@ def domain_lookup():
                         ips_to_scan.append(_.address)
         except Exception, e:
             lock.acquire()
-            print '[Warning] Invalid domain:', host
+            print '[%s][Warning] Invalid domain:', (get_time(), host)
             lock.release()
 
 
