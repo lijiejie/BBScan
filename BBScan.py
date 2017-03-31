@@ -24,7 +24,7 @@ import ssl
 import codecs
 import traceback
 from dns.resolver import Resolver
-from lib.common import get_time, parse_url
+from lib.common import get_time, parse_url, decode_response_text
 from lib.cmdline import parse_args
 from lib.report import template
 
@@ -259,7 +259,7 @@ class InfoDisScanner(object):
             if resp_headers.get('content-type', '').find('text') >= 0 \
                     or resp_headers.get('content-type', '').find('html') >= 0 \
                     or int(resp_headers.get('content-length', '0')) <= 10240:
-                html_doc = resp.text
+                html_doc = decode_response_text(resp.content)
             else:
                 html_doc = ''
             return status, resp_headers, html_doc
