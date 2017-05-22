@@ -1,4 +1,4 @@
-# BBScan 1.2.1 #
+# BBScan 1.2.3 #
 
 **BBScan** is a tiny **B**atch we**B** vulnerability **Scan**ner.
 
@@ -6,7 +6,7 @@
 * BeautifulSoup4>=4.3.2
 * py2-ipaddress>=3.4.1
 * dnspython>=1.15.0
-* requests>=2.11.1
+* gevent>=1.2.1
 
 You can install required packages with pip
 
@@ -21,12 +21,12 @@ You can install required packages with pip
 	
 	optional arguments:
 	  -h, --help            show this help message and exit
-	  --host HOST [HOST2 HOST3 ...]
+	  --host [HOST [HOST2 HOST3 ...] [HOST [HOST2 HOST3 ...] ...]]
 	                        Scan several hosts from command line
-	  -f TargetFile         Load targets from TargetFile
+	  -f TargetFile         Load new line delimited targets from TargetFile
 	  -d TargetDirectory    Load all *.txt files from TargetDirectory
 	  --crawler TargetDirectory
-	                        Load all *.log crawler file from TargetDirectory
+	                        Load all *.log crawler files from TargetDirectory
 	  --full-scan           Process all sub directories.
 	  -n, --no-crawl        No crawling, sub folders will not be processed.
 	  -nn, --no-check404    No HTTP 404 existence check
@@ -35,8 +35,8 @@ You can install required packages with pip
 	  --network MASK        Scan all Target/MASK hosts,
 	                        should be an int between 24 and 31
 	  --timeout Timeout     Max scan minutes for each website, 20 by default
-	  --browser             View report with browser after scan finished
-	  -md                   Save the scan report as markdown format
+	  -nnn, --no-browser    Do not view report with browser after scan finished
+	  -md                   Save scan report as markdown format
 	  -v                    show program's version number and exit
 
 **1. Scan several hosts from command line** 

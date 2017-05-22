@@ -49,13 +49,13 @@ def parse_args():
     parser.add_argument('--timeout', metavar='Timeout', type=int, default=20,
                         help='Max scan minutes for each website, 20 by default')
 
-    parser.add_argument('--browser', default=False, action='store_true',
-                        help='View report with browser after scan finished')
+    parser.add_argument('-nnn', '--no-browser', dest='no_browser', default=False, action='store_true',
+                        help='Do not view report with browser after scan finished')
 
     parser.add_argument('-md', default=False, action='store_true',
                         help='Save scan report as markdown format')
 
-    parser.add_argument('-v', action='version', version='%(prog)s 1.2    By LiJieJie (http://www.lijiejie.com)')
+    parser.add_argument('-v', action='version', version='%(prog)s 1.2.3    By LiJieJie (http://www.lijiejie.com)')
 
     if len(sys.argv) == 1:
         sys.argv.append('-h')

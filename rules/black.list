@@ -3,14 +3,13 @@
 # 匹配的条目将被丢弃
 
 
-
 {text="/404/search_children.js"}
 
-{text="http://qzone.qq.com/gy/404/data.js"}
+{text="qzone.qq.com/gy/404/data.js"}
 
 {text="访问的页面不存在"}
 
-{text="<center><h1>404 Not Found</h1></center>"}
+{text="404 Not Found"}
 
 {text="<p>The server encountered an internal error or"}
 
@@ -37,3 +36,11 @@
 {text="No direct script access allowed"}
 
 {text="args not correct"}
+
+{text="Controller Not Found"}
+
+{text="url error"}
+
+{text="Bad Request"}
+
+{text="http://appmedia.qq.com/media/flcdn/404.png"}

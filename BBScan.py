@@ -3,13 +3,17 @@
 # A tiny Batch weB vulnerability Scanner
 # my[at]lijiejie.com    http://www.lijiejie.com
 
-
+import gevent
+from gevent import monkey
+monkey.patch_all(thread=False)
+monkey.patch_socket()
+from gevent.queue import Queue
 import urlparse
-import requests
+import httplib
+import urllib2
 import logging
 import re
 import threading
-import Queue
 from bs4 import BeautifulSoup
 import multiprocessing
 import time
@@ -23,6 +27,7 @@ import sys
 import ssl
 import codecs
 import traceback
+import struct
 from dns.resolver import Resolver
 from lib.common import get_time, parse_url, decode_response_text
 from lib.cmdline import parse_args
@@ -47,7 +52,7 @@ class InfoDisScanner(object):
         self.full_scan = args.full_scan
         self._init_rules()
 
-        self.url_queue = Queue.Queue()     # all urls to scan
+        self.url_queue = Queue()           # all urls to scan
         self.urls_processed = set()        # processed urls
         self.urls_enqueued = set()         # entered queue urls
 
@@ -86,7 +91,6 @@ class InfoDisScanner(object):
             return
         self.base_url = '%s://%s' % (self.schema, self.host)
         self.max_depth = self._cal_depth(self.path)[1] + 5
-        self.session = requests.session()
         if self.args.no_check404:
             self._404_status = 404
             self.has_404 = True
@@ -95,7 +99,7 @@ class InfoDisScanner(object):
         if not self.has_404:
             print '[%s] [Warning] %s has no HTTP 404.' % (get_time(), self.host)
         _path, _depth = self._cal_depth(self.path)
-        self._enqueue('/')
+        # self._enqueue('/')
         self._enqueue(_path)
         if not self.args.no_crawl and not self.log_file:
             self.crawl_index(_path)
@@ -103,19 +107,19 @@ class InfoDisScanner(object):
     def is_port_open(self):
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.settimeout(4.0)
+            s.settimeout(5.0)
             default_port = 443 if self.schema.lower() == 'https' else 80
             host, port = self.host.split(':') if self.host.find(':') > 0 else (self.host, default_port)
             if s.connect_ex((host, int(port))) == 0:
                 print '[%s] Scan %s' % (get_time(), self.host)
                 return True
             else:
-                print '[%s] Fail to connect to %s' % (get_time(), self.host)
+                print '[%s] [ERROR] Fail to connect to %s' % (get_time(), self.host)
                 return False
-            s.close()
-        except Exception, e:
+        except Exception as  e:
             return False
         finally:
+            s.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER, struct.pack('ii', 1, 0))
             s.close()
 
     #
@@ -247,24 +251,35 @@ class InfoDisScanner(object):
         try:
             if not url:
                 url = '/'
-            url = self.base_url + url
-            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 '
-                                     '(KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36 BBScan/1.2',
-                       'Range': 'bytes=0-10240',
-                       'Connection': 'keep-alive'
-                       }
-            resp = self.session.get(url, headers=headers, timeout=(3.0, timeout))
-            resp_headers = resp.headers
-            status = resp.status_code
+
+            conn_fuc = httplib.HTTPSConnection if self.schema == 'https' else httplib.HTTPConnection
+            conn = conn_fuc(self.host, timeout=timeout)
+
+            conn.request(method='GET', url=url,
+                         headers={'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 '
+                                                '(KHTML, like Gecko) Chrome/38.0.2125.111 Safari/537.36 BBScan/1.3',
+                                  'Range': 'bytes=0-10240',
+                                  'Connection': 'Close'})
+            resp = conn.getresponse()
+            resp_headers = dict(resp.getheaders())
+            status = resp.status
             if resp_headers.get('content-type', '').find('text') >= 0 \
                     or resp_headers.get('content-type', '').find('html') >= 0 \
-                    or int(resp_headers.get('content-length', '0')) <= 10240:
-                html_doc = decode_response_text(resp.content)
+                    or int(resp_headers.get('content-length', '0')) <= 20480:    # 1024 * 20
+                html_doc = decode_response_text(resp.read())
             else:
                 html_doc = ''
+            try:
+                if conn.sock:
+                    conn.sock.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER, struct.pack('ii', 1, 0))
+            except:
+                pass
+            conn.close()
             return status, resp_headers, html_doc
-        except:
+        except Exception as e:
             return -1, {}, ''
+        finally:
+            conn.close()
 
     #
     def check_404(self):
@@ -278,34 +293,38 @@ class InfoDisScanner(object):
             if not self.has_404:
                 self.len_404_doc = len(html_doc)
             return self.has_404
-        except Exception, e:
+        except Exception as e:
             logging.error('[Check_404] Exception %s' % str(e))
 
     #
     def _enqueue(self, url):
-        url = str(url)
-        url_pattern = re.sub('\d+', '{num}', url)
-        if url_pattern in self.urls_processed or len(self.urls_processed) >= self.LINKS_LIMIT:
+        try:
+            url = str(url)
+            url_pattern = re.sub('\d+', '{num}', url)
+            if url_pattern in self.urls_processed or len(self.urls_processed) >= self.LINKS_LIMIT:
+                return False
+            else:
+                self.urls_processed.add(url_pattern)
+            # print 'Entered Queue:', url
+            for _ in self.rules_set:
+                try:
+                    full_url = url.rstrip('/') + _[0]
+                except:
+                    continue
+                if full_url in self.urls_enqueued:
+                    continue
+                url_description = {'prefix': url.rstrip('/'), 'full_url': full_url}
+                item = (url_description, _[1], _[2], _[3], _[4])
+                self.url_queue.put(item)
+                self.urls_enqueued.add(full_url)
+
+            if self.full_scan and url.count('/') >= 2:
+                self._enqueue('/'.join(url.split('/')[:-2]) + '/')    # sub folder enqueue
+
+            return True
+        except Exception as e:
+            print '[_enqueue.exception] %s' % str(e)
             return False
-        else:
-            self.urls_processed.add(url_pattern)
-        # print url
-        for _ in self.rules_set:
-            try:
-                full_url = url.rstrip('/') + _[0]
-            except:
-                continue
-            if full_url in self.urls_enqueued:
-                continue
-            url_description = {'prefix': url.rstrip('/'), 'full_url': full_url}
-            item = (url_description, _[1], _[2], _[3], _[4])
-            self.url_queue.put(item)
-            self.urls_enqueued.add(full_url)
-
-        if self.full_scan and url.count('/') >= 3:
-            self._enqueue('/'.join(url.split('/')[:-2]) + '/')    # sub folder enqueue
-
-        return True
 
     #
     def crawl_index(self, path):
@@ -313,8 +332,8 @@ class InfoDisScanner(object):
             status, headers, html_doc = self._http_request(path)
             if status != 200:
                 try:
-                    html_doc = self.session.get(self.url, headers={'Connection': 'close'}).text
-                except Exception, e:
+                    html_doc = decode_response_text(urllib2.urlopen(self.url).read())
+                except Exception as e:
                     pass
             soup = BeautifulSoup(html_doc, "html.parser")
             for link in soup.find_all('a'):
@@ -330,7 +349,7 @@ class InfoDisScanner(object):
                     if _ not in self.results['/']:
                         self.results['/'].append(_)
 
-        except Exception, e:
+        except Exception as e:
             logging.error('[crawl_index Exception] %s' % str(e))
             traceback.print_exc()
 
@@ -341,9 +360,9 @@ class InfoDisScanner(object):
                 for line in inFile.xreadlines():
                     _ = line.strip().split()
                     if len(_) == 3 and (_[2].find('^^^200') > 0 or _[2].find('^^^403') > 0 or _[2].find('^^^302') > 0):
-                        url, depth = self._cal_depth(url)
+                        url, depth = self._cal_depth(_[1])
                         self._enqueue(url)
-        except Exception, e:
+        except Exception as e:
             logging.error('[load_all_urls_from_file Exception] %s' % str(e))
             traceback.print_exc()
 
@@ -358,14 +377,14 @@ class InfoDisScanner(object):
         return False
 
     #
-    def exclude_text(self, html_doc):
+    def find_exclude_text(self, html_doc):
         for _text in self.text_to_exclude:
-            if html_doc.find(_text) > 0:
-                return False
+            if html_doc.find(_text) >= 0:
+                return True
         for _regex in self.regex_to_exclude:
-            if _regex.search(html_doc) > 0:
-                return False
-        return True
+            if _regex.search(html_doc):
+                return True
+        return False
 
     #
     def _scan_worker(self):
@@ -382,6 +401,7 @@ class InfoDisScanner(object):
                 url_description, tag, code, content_type, content_type_no = item
                 prefix = url_description['prefix']
                 url = url_description['full_url']
+                # print url
                 url = url.replace('{sub}', self.host.split('.')[0])
                 if url.find('{hostname_or_folder}') >= 0:
                     _url = url[: url.find('{hostname_or_folder}')]
@@ -399,7 +419,7 @@ class InfoDisScanner(object):
                     ret[-2] = ret[-1].replace('{parent}', ret[-2])
                     url = '/' + '/'.join(ret[:-1])
 
-            except Exception, e:
+            except Exception as e:
                 logging.error('[_scan_worker Exception] [1] %s' % str(e))
                 continue
             if not item or not url:
@@ -410,20 +430,21 @@ class InfoDisScanner(object):
                 status, headers, html_doc = self._http_request(url)
                 cur_content_type = headers.get('content-type', '')
 
-                if cur_content_type.find('image/') >= 0:    # exclude image type
+                if cur_content_type.find('image/') >= 0:    # exclude image
                     continue
 
-                if len(html_doc) < 10:    # data too short
+                if ('html' in cur_content_type or 'text' in cur_content_type) and \
+                        0 <= len(html_doc) <= 10:    # text too short
                     continue
 
-                if not self.exclude_text(html_doc):    # exclude text found
+                if self.find_exclude_text(html_doc):    # excluded text found
                     continue
 
                 valid_item = False
                 if self.find_text(html_doc):
                     valid_item = True
                 else:
-                    if status != code and status in [301, 302, 400, 404, 500, 501, 502, 503, 505]:
+                    if status != code and status in [301, 302, 400, 404, 501, 502, 503, 505]:
                         continue
                     if cur_content_type.find('application/json') >= 0 and \
                             not url.endswith('.json'):    # no json
@@ -475,28 +496,24 @@ class InfoDisScanner(object):
                 if len(self.results) >= 10:
                     print '[ERROR] Over 10 vulnerabilities found [%s], seems to be false positives.' % prefix
                     self.url_queue.queue.clear()
-            except Exception, e:
+            except Exception as e:
                 logging.error('[_scan_worker.Exception][2][%s] %s' % (url, str(e)))
                 traceback.print_exc()
 
     #
     def scan(self, threads=6):
         try:
-            threads_list = []
-            for i in range(threads):
-                t = threading.Thread(target=self._scan_worker)
-                threads_list.append(t)
-                t.start()
-            for t in threads_list:
-                t.join()
+            all_threads = [gevent.spawn(self._scan_worker) for i in range(threads)]
+            gevent.joinall(all_threads)
+
             for key in self.results.keys():
-                if len(self.results[key]) > 10:    # Over 10 URLs found under this folder: false positives
-                    del self.results[key]
+                if len(self.results[key]) > 10:    # Over 10 URLs found under this folder
+                    pass
+                    #self.results[key] = self.results[key][:1]
+
             return self.host, self.results
-        except Exception, e:
+        except Exception as e:
             print '[scan exception] %s' % str(e)
-        finally:
-            self.session.close()
 
 
 def batch_scan(q_targets, q_results, lock, args):
@@ -578,21 +595,21 @@ def save_report_thread(q_results, file):
 
             if all_results:
                 print '[%s] Scan report saved to report/%s' % (get_time(), report_name)
-                if args.browser:
+                if not args.no_browser:
                     webbrowser.open_new_tab(os.path.abspath('report/%s' % report_name))
             else:
                 lock.acquire()
                 print '[%s] No vulnerabilities found on sites in %s.' % (get_time(), file)
                 lock.release()
 
-        except Exception, e:
+        except Exception as e:
             print '[save_report_thread Exception] %s %s' % (type(e), str(e))
             sys.exit(-1)
 
 
 def domain_lookup():
     r = Resolver()
-    r.timeout = r.lifetime = 8.0
+    r.timeout = r.lifetime = 10.0
     while True:
         try:
             host = q_hosts.get(timeout=0.1)
@@ -610,10 +627,8 @@ def domain_lookup():
                     q_targets.put({'file': '', 'url': host})
                     for _ in answers:
                         ips_to_scan.append(_.address)
-        except Exception, e:
-            lock.acquire()
-            print '[%s][Warning] Invalid domain:', (get_time(), host)
-            lock.release()
+        except Exception as e:
+            print '[%s][Warning] Invalid domain * %s' % (get_time(), host)
 
 
 if __name__ == '__main__':
@@ -637,7 +652,7 @@ if __name__ == '__main__':
             with open(file) as inFile:
                 lines = inFile.readlines()
         try:
-            print '[%s] Batch web scan start.' % get_time()
+            print '[%s] Batch Web Scan start.' % get_time()
             q_results = multiprocessing.Manager().Queue()
             q_targets = multiprocessing.Manager().Queue()
             lock = multiprocessing.Manager().Lock()
@@ -652,22 +667,17 @@ if __name__ == '__main__':
                     q_targets.put({'file': _file, 'url': ''})
 
             if args.host or args.f or args.d:
-                q_hosts = Queue.Queue()
+                q_hosts = Queue()
                 for line in lines:
                     if line.strip():
                         # Works with https://github.com/lijiejie/subDomainsBrute
                         # delimiter "," is acceptable
                         hosts = line.replace(',', ' ').strip().split()
-                        for host in hosts:
+                        for host in hosts[:1]:    # first host only
                             q_hosts.put(host)
 
-                all_threads = []
-                for _ in range(20):
-                    t = threading.Thread(target=domain_lookup)
-                    all_threads.append(t)
-                    t.start()
-                for t in all_threads:
-                    t.join()
+                threads = [gevent.spawn(domain_lookup) for _ in range(20)]
+                gevent.joinall(threads)
 
                 if args.network != 32:
                     for ip in ips_to_scan:
@@ -696,7 +706,7 @@ if __name__ == '__main__':
             for p in scan_process:
                 p.join()
 
-        except KeyboardInterrupt, e:
+        except KeyboardInterrupt as e:
             print '[+] [%s] User aborted, running tasks crashed.' % get_time()
             try:
                 while True:
@@ -704,7 +714,7 @@ if __name__ == '__main__':
             except:
                 pass
 
-        except Exception, e:
+        except Exception as e:
             print '[__main__.exception] %s %s' % (type(e), str(e))
             traceback.print_exc()
 
