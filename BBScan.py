@@ -5,8 +5,7 @@
 
 import gevent
 from gevent import monkey
-monkey.patch_all(thread=False)
-monkey.patch_socket()
+monkey.patch_all(thread=False, socket=False)
 from gevent.queue import Queue
 import urlparse
 import httplib
