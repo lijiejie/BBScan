@@ -1,0 +1,1 @@
+/javax.faces.resource.../WEB-INF/web.xml.jsf    {status=200}    {type="xml"}    {tag="<?xml"}    {root_only}

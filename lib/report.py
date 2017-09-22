@@ -21,7 +21,7 @@ html_general = """
 </style>
 </head>
 <body>
-<p>Please consider to contribute some rules to make BBScan more efficient.  <b>BBScan v 1.2</b></p>
+<p>Please consider to contribute some rules to make BBScan more efficient.  <b>BBScan v 1.3</b></p>
 <p>Current Scan finished in ${cost_min} min ${cost_seconds} seconds.</p>
 ${content}
 </body>
@@ -36,7 +36,7 @@ ${list}
 """
 
 html_list_item = """
- <li class="normal">[${status}] [${title}] <a href="${url}" target="_blank">${url}</a></li>
+ <li class="normal">${status} [${title}] <a href="${url}" target="_blank">${url}</a></li>
 """
 
 html = {
@@ -51,7 +51,7 @@ html = {
 markdown_general = """
 # BBScan Report 
 Please consider to contribute some rules to make BBScan more efficient.
-Version:v 1.2
+Version:v 1.3
 TimeUsage: ${cost_min} min ${cost_seconds} seconds
 ${content}
 """

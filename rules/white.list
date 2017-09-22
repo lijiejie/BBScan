@@ -26,6 +26,8 @@
 
 {text="Graphite Browser"}
 
+{text="http://www.atlassian.com/software/jira"}
+
 #  {regex_text="<input.*type="password""}
 
 #  {text="Internal Server Error"}
@@ -44,6 +46,5 @@
 
 {regex_text="<title>.*后台.*</title>"}
 
-{regex_text="<title>.*管理系统.*</title>"}
-
+{regex_text="<title>.*管理.*</title>"}
 

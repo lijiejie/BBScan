@@ -1,0 +1,174 @@
+
+
+/temp.zip                 {status=206}    {type="application/octet-stream"}
+/temp.rar                 {status=206}    {type="application/octet-stream"}
+/temp.tar.gz              {status=206}    {type="application/octet-stream"}
+/temp.tgz                 {status=206}    {type="application/octet-stream"}
+/temp.tar.bz2             {status=206}    {type="application/octet-stream"}
+
+
+/package.zip              {status=206}    {type="application/octet-stream"}
+/package.rar              {status=206}    {type="application/octet-stream"}
+/package.tar.gz           {status=206}    {type="application/octet-stream"}
+/package.tgz              {status=206}    {type="application/octet-stream"}
+/package.tar.bz2          {status=206}    {type="application/octet-stream"}
+
+
+/tmp.zip                 {status=206}    {type="application/octet-stream"}
+/tmp.rar                 {status=206}    {type="application/octet-stream"}
+/tmp.tar.gz              {status=206}    {type="application/octet-stream"}
+/tmp.tgz                 {status=206}    {type="application/octet-stream"}
+/tmp.tar.bz2             {status=206}    {type="application/octet-stream"}
+
+
+/test.zip               {status=206}    {type="application/octet-stream"}
+/test.rar               {status=206}    {type="application/octet-stream"}
+/test.tar.gz            {status=206}    {type="application/octet-stream"}
+/test.tgz               {status=206}    {type="application/octet-stream"}
+/test.tar.bz2           {status=206}    {type="application/octet-stream"}
+
+/backup.zip             {status=206}    {type="application/octet-stream"}
+/backup.rar             {status=206}    {type="application/octet-stream"}
+/backup.tar.gz          {status=206}    {type="application/octet-stream"}
+/backup.tgz             {status=206}    {type="application/octet-stream"}
+/back.tar.bz2           {status=206}    {type="application/octet-stream"}
+
+
+/db.zip                 {status=206}    {type="application/octet-stream"}    {root_only}
+/db.rar                 {status=206}    {type="application/octet-stream"}    {root_only}
+/db.tar.gz              {status=206}    {type="application/octet-stream"}    {root_only}
+/db.tgz                 {status=206}    {type="application/octet-stream"}    {root_only}
+/db.tar.bz2             {status=206}    {type="application/octet-stream"}    {root_only}
+/db.inc                 {status=200}	{type_no="html"}
+/db.sqlite              {status=206}    {type="application/octet-stream"}    {root_only}
+
+
+/db.sql.gz              {status=206}    {type="application/octet-stream"}    {root_only}
+/dump.sql.gz            {status=206}    {type="application/octet-stream"}    {root_only}
+/database.sql.gz        {status=206}    {type="application/octet-stream"}    {root_only}
+/backup.sql.gz          {status=206}    {type="application/octet-stream"}    {root_only}
+/data.sql.gz            {status=206}    {type="application/octet-stream"}    {root_only}
+
+
+/data.zip               {status=206}    {type="application/octet-stream"}    {root_only}
+/data.rar               {status=206}    {type="application/octet-stream"}    {root_only}
+/data.tar.gz            {status=206}    {type="application/octet-stream"}    {root_only}
+/data.tgz               {status=206}    {type="application/octet-stream"}    {root_only}
+/data.tar.bz2           {status=206}    {type="application/octet-stream"}    {root_only}
+
+
+/database.zip           {status=206}    {type="application/octet-stream"}    {root_only}
+/database.rar           {status=206}    {type="application/octet-stream"}    {root_only}
+/database.tar.gz        {status=206}    {type="application/octet-stream"}    {root_only}
+/database.tgz           {status=206}    {type="application/octet-stream"}    {root_only}
+/database.tar.bz2       {status=206}    {type="application/octet-stream"}    {root_only}
+
+
+/ftp.zip                {status=206}    {type="application/octet-stream"}    {root_only}
+/ftp.rar                {status=206}    {type="application/octet-stream"}    {root_only}
+/ftp.tar.gz             {status=206}    {type="application/octet-stream"}    {root_only}
+/ftp.tgz                {status=206}    {type="application/octet-stream"}    {root_only}
+/ftp.tar.bz2            {status=206}    {type="application/octet-stream"}    {root_only}
+
+/web.zip                {status=206}    {type="application/octet-stream"}   {root_only}
+/web.rar                {status=206}    {type="application/octet-stream"}   {root_only}
+/web.tar.gz             {status=206}    {type="application/octet-stream"}   {root_only}
+/web.tgz                {status=206}    {type="application/octet-stream"}   {root_only}
+/web.tar.bz2            {status=206}    {type="application/octet-stream"}   {root_only}
+
+
+/www.zip                {status=206}    {type="application/octet-stream"}   {root_only}
+/www.rar                {status=206}    {type="application/octet-stream"}   {root_only}
+/www.tar.gz             {status=206}    {type="application/octet-stream"}   {root_only}
+/www.tgz                {status=206}    {type="application/octet-stream"}   {root_only}
+/www.tar.bz2            {status=206}    {type="application/octet-stream"}   {root_only}
+
+/wwwroot.zip            {status=206}    {type="application/octet-stream"}   {root_only}
+/wwwroot.rar            {status=206}    {type="application/octet-stream"}   {root_only}
+/wwwroot.tar.gz         {status=206}    {type="application/octet-stream"}   {root_only}
+/wwwroot.tgz            {status=206}    {type="application/octet-stream"}   {root_only}
+/wwwroot.tar.bz2        {status=206}    {type="application/octet-stream"}   {root_only}
+
+
+/output.tar.gz        {status=206}    {type="application/octet-stream"}    {root_only}
+
+
+/admin.zip            {status=206}    {type="application/octet-stream"}    {root_only}
+/admin.rar            {status=206}    {type="application/octet-stream"}    {root_only}
+/admin.tar.gz         {status=206}    {type="application/octet-stream"}    {root_only}
+/admin.tgz            {status=206}    {type="application/octet-stream"}    {root_only}
+/admin.tar.bz2        {status=206}    {type="application/octet-stream"}    {root_only}
+
+/upload.zip            {status=206}    {type="application/octet-stream"}    {root_only}
+/upload.rar            {status=206}    {type="application/octet-stream"}    {root_only}
+/upload.tar.gz         {status=206}    {type="application/octet-stream"}    {root_only}
+/upload.tgz            {status=206}    {type="application/octet-stream"}    {root_only}
+/upload.tar.bz2        {status=206}    {type="application/octet-stream"}    {root_only}
+
+/website.zip            {status=206}    {type="application/octet-stream"}    {root_only}
+/website.rar            {status=206}    {type="application/octet-stream"}    {root_only}
+/website.tar.gz         {status=206}    {type="application/octet-stream"}    {root_only}
+/website.tgz            {status=206}    {type="application/octet-stream"}    {root_only}
+/website.tar.bz2        {status=206}    {type="application/octet-stream"}    {root_only}
+
+/package.zip            {status=206}    {type="application/octet-stream"}    {root_only}
+/package.rar            {status=206}    {type="application/octet-stream"}    {root_only}
+/package.tar.gz         {status=206}    {type="application/octet-stream"}    {root_only}
+/package.tgz            {status=206}    {type="application/octet-stream"}    {root_only}
+/package.tar.bz2        {status=206}    {type="application/octet-stream"}    {root_only}
+
+/sql.zip                {status=206}     {type="application/octet-stream"}    {root_only}
+/sql.rar                {status=206}     {type="application/octet-stream"}    {root_only}
+/sql.tar.gz             {status=206}     {type="application/octet-stream"}    {root_only}
+/sql.tgz                {status=206}     {type="application/octet-stream"}    {root_only}
+/sql.tar.bz2            {status=206}     {type="application/octet-stream"}    {root_only}
+/sql.7z                 {status=206}     {type="application/octet-stream"}    {root_only}
+
+/data.sql               {status=206}     {type="application/octet-stream"}   {tag="CREATE TABLE"}    {root_only}
+/database.sql           {status=206}     {type="application/octet-stream"}   {tag="CREATE TABLE"}    {root_only}
+/db.sql                 {status=206}     {type="application/octet-stream"}   {tag="CREATE TABLE"}    {root_only}
+/test.sql               {status=206}     {type="application/octet-stream"}   {tag="CREATE TABLE"}    {root_only}
+/admin.sql              {status=206}     {type="application/octet-stream"}   {tag="CREATE TABLE"}    {root_only}
+/backup.sql             {status=206}     {type="application/octet-stream"}   {tag="CREATE TABLE"}    {root_only}
+/dump.sql               {status=206}     {type="application/octet-stream"}   {tag="CREATE TABLE"}    {root_only}
+/{sub}.sql              {status=206}     {type="application/octet-stream"}   {tag="CREATE TABLE"}    {root_only}
+
+/index.zip              {status=206}       {type="application/octet-stream"}    {root_only}
+/index.7z               {status=206}       {type="application/octet-stream"}    {root_only}
+/index.bak              {status=206}       {type="application/octet-stream"}    {root_only}
+/index.rar              {status=206}       {type="application/octet-stream"}    {root_only}
+/index.tar.tz           {status=206}       {type="application/octet-stream"}    {root_only}
+/index.tar.bz2          {status=206}       {type="application/octet-stream"}    {root_only}
+/index.tar.gz           {status=206}       {type="application/octet-stream"}    {root_only}
+
+
+/old.zip             {status=206}    {type="application/octet-stream"}    {root_only}
+/old.rar             {status=206}    {type="application/octet-stream"}    {root_only}
+/old.tar.gz          {status=206}    {type="application/octet-stream"}    {root_only}
+/old.tar.bz2         {status=206}    {type="application/octet-stream"}    {root_only}
+/old.tgz             {status=206}    {type="application/octet-stream"}    {root_only}
+/old.7z              {status=206}    {type="application/octet-stream"}    {root_only}
+
+/1.tar.gz            {status=206}    {type="application/octet-stream"}    {root_only}
+/a.tar.gz            {status=206}    {type="application/octet-stream"}    {root_only}
+/x.tar.gz            {status=206}    {type="application/octet-stream"}    {root_only}
+/o.tar.gz            {status=206}    {type="application/octet-stream"}    {root_only}
+
+/conf/conf.zip       {status=206}    {type="application/octet-stream"}    {root_only}
+/conf.tar.gz         {status=206}    {type="application/octet-stream"}    {root_only}
+/config.tar.gz       {status=206}    {type="application/octet-stream"}    {root_only}
+
+/proxy.pac           {status=206}    {type="application/octet-stream"}    {root_only}
+/server.cfg          {status=206}    {type="application/octet-stream"}    {root_only}
+
+/deploy.tar.gz       {status=206}    {type="application/octet-stream"}    {root_only}
+/build.tar.gz        {status=206}    {type="application/octet-stream"}    {root_only}
+/install.tar.gz      {status=206}    {type="application/octet-stream"}    {root_only}
+/site.tar.gz         {status=206}    {type="application/octet-stream"}    {root_only}
+/webroot.zip         {status=206}    {type="application/octet-stream"}    {root_only}
+/tools.tar.gz        {status=206}    {type="application/octet-stream"}    {root_only}
+/webserver.tar.gz    {status=206}    {type="application/octet-stream"}    {root_only}
+/htdocs.tar.gz       {status=206}    {type="application/octet-stream"}    {root_only}
+/src.tar.gz          {status=206}    {type="application/octet-stream"}    {root_only}
+/code.tar.gz         {status=206}    {type="application/octet-stream"}    {root_only}
+

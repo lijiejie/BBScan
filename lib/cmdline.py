@@ -12,7 +12,7 @@ import os
 def parse_args():
     parser = argparse.ArgumentParser(prog='BBScan',
                                      formatter_class=argparse.RawTextHelpFormatter,
-                                     description='* A tiny Batch weB vulnerability Scanner. *\n'
+                                     description='* A tiny Batch weB+ vulnerability Scanner. *\n'
                                                  'By LiJieJie (http://www.lijiejie.com)',
                                      usage='BBScan.py [options]')
 
@@ -28,7 +28,7 @@ def parse_args():
     parser.add_argument('--crawler', metavar='TargetDirectory', type=str, default='',
                         help='Load all *.log crawler files from TargetDirectory')
 
-    parser.add_argument('--full-scan', dest='full_scan', default=False, action='store_true',
+    parser.add_argument('--full', dest='full_scan', default=False, action='store_true',
                         help='Process all sub directories.')
 
     parser.add_argument('-n', '--no-crawl', dest='no_crawl', default=False, action='store_true',
@@ -37,8 +37,14 @@ def parse_args():
     parser.add_argument('-nn', '--no-check404', dest='no_check404', default=False, action='store_true',
                         help='No HTTP 404 existence check')
 
-    parser.add_argument('-p', metavar='PROCESS', type=int, default=8,
-                        help='Num of processes running concurrently, 8 by default')
+    parser.add_argument('--scripts-only', dest='scripts_only', default=False, action='store_true',
+                        help='Scan with user scripts only')
+
+    parser.add_argument('--no-scripts', dest='no_scripts', default=False, action='store_true',
+                        help='Disable user scripts scan')
+
+    parser.add_argument('-p', metavar='PROCESS', type=int, default=30,
+                        help='Num of processes running concurrently, 30 by default')
 
     parser.add_argument('-t', metavar='THREADS', type=int, default=3,
                         help='Num of scan threads for each scan process, 3 by default')
@@ -55,7 +61,7 @@ def parse_args():
     parser.add_argument('-md', default=False, action='store_true',
                         help='Save scan report as markdown format')
 
-    parser.add_argument('-v', action='version', version='%(prog)s 1.2.3    By LiJieJie (http://www.lijiejie.com)')
+    parser.add_argument('-v', action='version', version='%(prog)s 1.3    By LiJieJie (http://www.lijiejie.com)')
 
     if len(sys.argv) == 1:
         sys.argv.append('-h')
@@ -72,14 +78,18 @@ def check_args(args):
               '-d TargetDirectory \n           ' \
               '--crawler TargetDirectory \n           ' \
               '--host www.host1.com www.host2.com 8.8.8.8'
-        raise Exception(msg)
+        print msg
+        exit(-1)
 
     if args.f and not os.path.isfile(args.f):
-        raise Exception('TargetFile not found: %s' % args.f)
+        print 'TargetFile not found: %s' % args.f
+        exit(-1)
 
     if args.d and not os.path.isdir(args.d):
-        raise Exception('TargetDirectory not found: %s' % args.f)
+        print 'TargetDirectory not found: %s' % args.f
+        exit(-1)
 
     args.network = int(args.network)
     if not (24 <= args.network <= 32):
-        raise Exception('--network must be an integer between 24 and 31')
+        print 'Network must be an integer between 24 and 31'
+        exit(-1)

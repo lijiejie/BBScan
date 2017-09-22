@@ -1,6 +1,6 @@
-# BBScan 1.2.3 #
+# BBScan 1.3 #
 
-**BBScan** is a tiny **B**atch we**B** vulnerability **Scan**ner.
+**BBScan** is a tiny **B**atch we**B**+ vulnerability **Scan**ner.
 
 ## Requirements ##
 * BeautifulSoup4>=4.3.2
@@ -16,7 +16,7 @@ You can install required packages with pip
 
 	usage: BBScan.py [options]
 	
-	* A tiny Batch weB vulnerability Scanner. *
+	* A tiny Batch weB+ vulnerability Scanner. *
 	By LiJieJie (http://www.lijiejie.com)
 	
 	optional arguments:
@@ -27,10 +27,12 @@ You can install required packages with pip
 	  -d TargetDirectory    Load all *.txt files from TargetDirectory
 	  --crawler TargetDirectory
 	                        Load all *.log crawler files from TargetDirectory
-	  --full-scan           Process all sub directories.
+	  --full                Process all sub directories.
 	  -n, --no-crawl        No crawling, sub folders will not be processed.
 	  -nn, --no-check404    No HTTP 404 existence check
-	  -p PROCESS            Num of processes running concurrently, 8 by default
+	  --scripts-only        Scan with user scripts only
+	  --no-scripts          Disable user scripts scan
+	  -p PROCESS            Num of processes running concurrently, 30 by default
 	  -t THREADS            Num of scan threads for each scan process, 3 by default
 	  --network MASK        Scan all Target/MASK hosts,
 	                        should be an int between 24 and 31
@@ -38,6 +40,7 @@ You can install required packages with pip
 	  -nnn, --no-browser    Do not view report with browser after scan finished
 	  -md                   Save scan report as markdown format
 	  -v                    show program's version number and exit
+
 
 **1. Scan several hosts from command line** 
 
@@ -77,14 +80,15 @@ BBScan是一个迷你的信息泄漏批量扫描脚本。 可以通过文本批�
 			. GET http://www.iqiyi.com/ HTTP/1.1^^^200
 			. POST http://www.pps.tv/login.php HTTP/1.1^^^user=admin&passwd=admin^^^200
 
-`--full-scan`  处理所有的子文件夹，比如 `http://www.target.com/aa/bb/cc/`, `/aa/bb/cc/` `/aa/bb/` `/aa/` 三个path都将被扫描
+`--full`  处理所有的子文件夹，比如 `http://www.target.com/aa/bb/cc/`, `/aa/bb/cc/` `/aa/bb/` `/aa/` 三个path都将被扫描
 
 `-n, --no-crawl`  不从首页抓取新的URL
 
 `-nn, --no-check404` 不检查状态码404是否存在，不保存404页面的大小进行后续比对
 
 
-## web漏洞应急中的简单应用 ##
+
+## web漏洞应急扫描 ##
 
 以批量扫描 Zabbix SQL注入为例，在一个txt文件中写入规则：
 
