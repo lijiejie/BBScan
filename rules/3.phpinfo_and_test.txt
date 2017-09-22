@@ -26,7 +26,7 @@
 
 
 # Test CGI     {tag="SERVER_NAME"}
-/test.cgi              {status=200}     {type="html"}
-/test-cgi              {status=200}     {type="html"}
-/cgi-bin/test-cgi      {status=200}     {type="html"}
+#/test.cgi              {status=200}     {type="html"}      {root_only}
+#/test-cgi              {status=200}     {type="html"}      {root_only}
+#/cgi-bin/test-cgi      {status=200}     {type="html"}      {root_only}
 
