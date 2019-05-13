@@ -6,10 +6,10 @@
 html_general = """
 <html>
 <head>
-<title>BBScan Report</title>
+<title>BBScan Scan Report</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <style>
-    body {width:960px; margin:auto; margin-top:10px; background:rgb(200,200,200);}
+    body {width:960px; margin:auto; margin-top:10px; background:rgb(240,240,240);}
     p {color: #666;}
     h2 {color:#002E8C; font-size: 1em; padding-top:5px;}
     ul li {
@@ -18,11 +18,11 @@ html_general = """
     white-space: pre-wrap;
     margin-bottom:10px;
     }
+    span {color: purple;}
 </style>
 </head>
 <body>
-<p>Please consider to contribute some rules to make BBScan more efficient.  <b>BBScan v 1.3</b></p>
-<p>Current Scan finished in ${cost_min} min ${cost_seconds} seconds.</p>
+<p>Scan finished in <font color=green>${cost_min} ${cost_seconds} seconds</font>. <b>BBScan v 1.4</b></p>
 ${content}
 </body>
 </html>
@@ -36,7 +36,7 @@ ${list}
 """
 
 html_list_item = """
- <li class="normal">${status} [${title}] <a href="${url}" target="_blank">${url}</a></li>
+ <li class="normal"> ${status} <span>${vul_type}</span> ${title}  <a href="${url}" target="_blank">${url}</a></li>
 """
 
 html = {
@@ -49,10 +49,9 @@ html = {
 
 # template for markdown
 markdown_general = """
-# BBScan Report 
-Please consider to contribute some rules to make BBScan more efficient.
-Version:v 1.3
-TimeUsage: ${cost_min} min ${cost_seconds} seconds
+# BBScan Scan Report
+Version:v 1.4
+Time cost: ${cost_min} ${cost_seconds} seconds
 ${content}
 """
 
@@ -61,7 +60,7 @@ markdown_host = """
 ${list}
 """
 
-markdown_list_item = """* ${status} ${title} ${url}
+markdown_list_item = """* [${status}] ${title} ${url}
 """
 
 markdown = {

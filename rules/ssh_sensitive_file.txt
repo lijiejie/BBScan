@@ -1,0 +1,10 @@
+# SSH
+
+/.ssh/known_hosts          {status=206}      {type="application/octet-stream"}   {root_only}
+/.ssh/id_rsa               {status=200}      {tag="PRIVATE KEY-"}       {root_only}
+/id_rsa                    {status=200}      {tag="PRIVATE KEY-"}       {root_only}
+/.ssh/id_rsa.pub           {status=200}      {tag="ssh-rsa"}            {root_only}
+/.ssh/id_dsa               {status=200}      {tag="PRIVATE KEY-"}       {root_only}
+/id_dsa                    {status=200}      {tag="PRIVATE KEY-"}       {root_only}
+/.ssh/id_dsa.pub           {status=200}      {tag="ssh-dss"}            {root_only}
+/.ssh/authorized_keys      {status=200}      {tag="ssh-rsa"}            {root_only}

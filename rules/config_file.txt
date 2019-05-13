@@ -1,0 +1,26 @@
+# Config
+/config.inc               {status=200}	   {type_no="html"}      {root_only}
+/config.php.bak           {status=206}	   {type="application/octet-stream"}   {tag="<?php"}    {root_only}
+/db.php.bak               {status=206}	   {type="application/octet-stream"}   {tag="<?php"}    {root_only}
+/conf/config.ini              {status=200}      {type_no="html"}      {root_only}
+/config.ini                   {status=200}      {type_no="html"}
+/config/config.ini            {status=200}      {type_no="html"}      {root_only}
+/configuration.ini            {status=200}      {type_no="html"}      {root_only}
+/configs/application.ini      {status=200}      {type_no="html"}      {root_only}
+/settings.ini         {status=200}      {type_no="html"}   {root_only}
+/application.ini      {status=200}      {type_no="html"}   {root_only}
+/conf.ini             {status=200}      {type_no="html"}   {root_only}
+/app.ini              {status=200}      {type_no="html"}   {root_only}
+/config.json	      {status=200}      {type="application/json"}        {tag="pass"}   {root_only}
+/application/configs/application.ini    {tag="["}    {type_no="html"}    {root_only}    {root_only}
+/.idea/workspace.xml    {status=200}    {tag="<project version="}       {type="xml"}    {root_only}
+/.idea/modules.xml      {status=200}    {tag="ProjectModuleManager"}    {type="xml"}    {root_only}
+
+/sftp-config.json	         {status=200}    {type="application/json"}   {tag="password"}  {root_only}
+# /app.cfg                   {status=206}    {root_only}
+
+# db config
+/config/database.yml       {status=200}    {type_no="html"}  {tag="passw"}    {root_only}
+/database.yml              {status=200}    {type_no="html"}  {root_only}
+/db.conf        {status=200}      {type_no="html"}           {root_only}
+/db.ini         {status=200}      {type_no="html"}   {tag="passw"}        {root_only}

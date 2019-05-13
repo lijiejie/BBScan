@@ -3,13 +3,8 @@
 #  Common functions
 #
 
-import time
 import urlparse
 import re
-
-
-def print_msg(msg):
-    print '[%s] %s' % (time.strftime('%H:%M:%S', time.localtime()), msg)
 
 
 def parse_url(url):
@@ -23,20 +18,17 @@ def decode_response_text(txt, charset=None):
     if charset:
         try:
             return txt.decode(charset)
-        except:
+        except Exception as e:
             pass
-
     for _ in ['UTF-8', 'GB2312', 'GBK', 'iso-8859-1', 'big5']:
         try:
             return txt.decode(_)
-        except:
+        except Exception as e:
             pass
-
     try:
         return txt.decode('ascii', 'ignore')
-    except:
+    except Exception as e:
         pass
-
     raise Exception('Fail to decode response Text')
 
 
@@ -78,18 +70,24 @@ def cal_depth(self, url):
     return url, depth
 
 
-def save_user_script_result(self, status, url, title):
+def save_user_script_result(self, status, url, title, vul_type=''):
     self.lock.acquire()
-    #print '[+] [%s] %s' % (status, url)
+    # print '[+] [%s] %s' % (status, url)
     if url not in self.results:
         self.results[url] = []
-    _ = {'status': status, 'url': url, 'title': title}
+    _ = {'status': status, 'url': url, 'title': title, 'vul_type': vul_type}
     self.results[url].append(_)
     self.lock.release()
 
 
 def get_domain_sub(host):
-    if re.search('\d+\.\d+\.\d+\.\d+', host.split(':')[0]):
+    if re.search(r'\d+\.\d+\.\d+\.\d+', host.split(':')[0]):
         return ''
     else:
         return host.split('.')[0]
+
+
+def escape(html):
+    return html.replace('&', '&amp;').\
+        replace('<', '&lt;').replace('>', '&gt;').\
+        replace('"', '&quot;').replace("'", '&#39;')

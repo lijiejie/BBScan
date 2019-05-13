@@ -12,7 +12,7 @@
 
 {text="MemAdmin"}
 
-{text="This is the default start page for the Resin server"}
+# {text="This is the default start page for the Resin server"}
 
 # {text="Apache Tomcat"}
 
@@ -26,6 +26,8 @@
 
 {text="Graphite Browser"}
 
+{text="'/app/kibana'"}
+
 {text="http://www.atlassian.com/software/jira"}
 
 #  {regex_text="<input.*type="password""}
@@ -38,13 +40,12 @@
 
 #  {text="Incorrect syntax"}
 
-{text="You have an error in your SQL syntax"}
+#  {text="You have an error in your SQL syntax"}
 
-{text="</b> on line <b>"}
+#  {text="</b> on line <b>"}
 
 {text="The proxy server could not handle the request"}
 
 {regex_text="<title>.*后台.*</title>"}
 
 {regex_text="<title>.*管理.*</title>"}
-

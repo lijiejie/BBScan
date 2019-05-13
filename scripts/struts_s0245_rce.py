@@ -39,6 +39,6 @@ def do_check(self, url):
     try:
         html = self.conn_pool.urlopen(method='POST', url=self.base_url + '/' + url, body=data, headers=headers, retries=1).data
         if html.find('LOGNAME=') >= 0:
-            save_user_script_result(self, '', self.base_url + '/' + url, 'Struts2 s02-45 Remote Code Execution')
+            save_user_script_result(self, '', self.base_url + '/' + url, '', 'Struts2 s02-45 Remote Code Execution')
     except Exception as e:
         pass

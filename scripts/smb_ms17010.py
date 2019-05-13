@@ -66,6 +66,6 @@ def do_check(self, url):
         data = s.recv(1024)
         s.close()
         if "\x05\x02\x00\xc0" in data:
-            save_user_script_result(self, '', ip + ':445', 'MS17010 SMB Remote Code Execution')
+            save_user_script_result(self, '', ip + ':445', '', 'MS17010 SMB Remote Code Execution')
     except Exception as e:
         return False

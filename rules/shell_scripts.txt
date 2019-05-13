@@ -1,0 +1,10 @@
+
+/install.sh           {status=206}    {root_only}    {tag='#!/'}
+/deploy.sh            {status=206}    {root_only}    {tag='#!/'}
+/upload.sh            {status=206}    {root_only}    {tag='#!/'}
+/setup.sh             {status=206}    {root_only}    {tag='#!/'}
+/backup.sh            {status=206}    {root_only}    {tag='#!/'}
+/rsync.sh             {status=206}    {root_only}    {tag='#!/'}
+/sync.sh              {status=206}    {root_only}    {tag='#!/'}
+/test.sh              {status=206}    {root_only}    {tag='#!/'}
+/run.sh               {status=206}    {root_only}    {tag='#!/'}

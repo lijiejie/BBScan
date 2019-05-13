@@ -1,0 +1,16 @@
+/test.php      {status=200}     {type="html"}      {root_only}
+/test2.php     {status=200}     {type="html"}      {root_only}
+/test.html     {status=200}     {type="html"}      {root_only}
+/test2.html    {status=200}     {type="html"}      {root_only}
+/test.jsp      {status=200}     {type="html"}      {root_only}
+/test.txt      {status=200}     {type="text/plain"}      {root_only}
+/test2.txt     {status=200}     {type="text/plain"}      {root_only}
+/debug.php     {status=200}     {type="html"}      {root_only}
+/a.php         {status=200}     {type="html"}      {root_only}
+/1.php         {status=200}     {type="html"}      {root_only}
+
+
+# Test CGI     {tag="SERVER_NAME"}
+#/test.cgi              {status=200}     {type="html"}      {root_only}
+#/test-cgi              {status=200}     {type="html"}      {root_only}
+#/cgi-bin/test-cgi      {status=200}     {type="html"}      {root_only}

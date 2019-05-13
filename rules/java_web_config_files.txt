@@ -3,7 +3,7 @@
 /WEB-INF/web.xml                        {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
 /WEB-INF/web.xml.bak                    {tag="<?xml"}    {status=206}                        {root_only}
 /WEB-INF/applicationContext.xml         {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
-/WEB-INF/applicationContext-slave.xml   {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
+# /WEB-INF/applicationContext-slave.xml   {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
 /WEB-INF/config.xml                     {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
 /WEB-INF/spring.xml                     {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
 /WEB-INF/struts-config.xml              {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
@@ -26,8 +26,11 @@
 
 /server.xml                   {status=200}     {tag="<?xml"}    {type="xml"}      {root_only}
 /config/database.yml          {status=200}     {type_no="html"}                   {root_only}
-/configprops                  {status=200}     {tag="serverProperties"}           {root_only}
 
+# Spring Boot Actuator
+/configprops                  {status=200}     {tag="serverProperties"}           {root_only}
+/actuator/configprops         {status=200}     {tag="serverProperties"}           {root_only}
+/env                          {status=200}     {tag="systemProperties"}           {root_only}
 
 /WEB-INF/database.properties              {status=206}    {type_no="html"}  {root_only}
 /WEB-INF/web.properties                   {status=206}    {type_no="html"}  {root_only}
@@ -40,4 +43,3 @@
 /WEB-INF/classes/security.properties      {status=206}    {type_no="html"}  {root_only}
 /WEB-INF/conf/database_config.properties  {status=206}    {type_no="html"}  {root_only}
 /WEB-INF/config/dbconfig      {status=200}     {tag="passw"}    {type_no="html"}  {root_only}
-

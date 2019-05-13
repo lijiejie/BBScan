@@ -1,0 +1,4 @@
+# Tomcat Examples
+# /examples/                                  {status=200}      {type="html"}     {tag="<TITLE>Apache Tomcat Examples</TITLE>"}   {root_only}
+# /examples/servlets/servlet/SessionExample   {status=200}      {type="html"}     {tag="<title>Sessions Example</title>"}         {root_only}
+/manager/html                                 {status=401}      {root_only}

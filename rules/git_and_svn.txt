@@ -1,0 +1,5 @@
+# SVN and Git
+/.svn/entries         {status=200}    {tag="-props"}
+/.git/config          {status=200}    {tag="[core]"}          {root_only}
+/.git/index           {status=200}    {tag="DIRC"}            {root_only}
+/.git/HEAD	          {status=200}    {tag="refs/heads/"}     {root_only}

@@ -1,0 +1,16 @@
+
+/index.php.bak        {status=206}      {type="application/"}           {tag="<?php"}
+/.index.php.swp       {status=206}      {tag="<?php"}
+
+/config.inc.php.bak      {status=206}        {tag="<?php"}
+/config.php.bak          {status=206}        {tag="<?php"}
+
+/.config.inc.php.swp     {status=206}        {tag="<?php"}
+
+/config/.config.php.swp  {status=200}    {tag="<?php"}
+/.config.php.swp         {status=200}    {tag="<?php"}
+
+/.settings.php.swp       {status=206}               {tag="<?php"}
+/.database.php.swp       {status=206}               {tag="<?php"}
+/.db.php.swp             {status=206}               {tag="<?php"}
+/.mysql.php.swp          {status=206}               {tag="<?php"}

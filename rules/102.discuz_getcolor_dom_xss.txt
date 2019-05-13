@@ -1,2 +1,0 @@
-# /static/image/admincp/getcolor.htm  {status=200} {tag="if(fun) eval('parent.'+fun+'"}  {type="html"}
-# Scan with user script: discuz_backup_file.py

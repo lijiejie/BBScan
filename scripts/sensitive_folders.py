@@ -1,52 +1,46 @@
 
 from lib.common import save_user_script_result
 
-folders = """
-/admin
-/output
-/tmp
-/temp
-/test
-/conf
-/config
-/db
-/database
-/install
-/open-flash-chart
+'''
+Temporary disabled item:
+
+/WEB-INF/classes
 /jPlayer
 /jwplayer
 /extjs
-/boss
-/ckeditor
-/cgi-bin
-/.ssh
-/ckfinder
-/.git
-/.svn
-/editor
-/bak
-/fck
-/.idea
 /swfupload
-/kibana
-/monitor
+/boss
+/editor
+/ckeditor
 /htmedit
 /htmleditor
 /ueditor
-/resin-doc
-/resin-admin
 /tomcat
-/zabbix
+/output
+/fck
+/cgi-bin
+'''
+
+
+folders = """
+/admin
+/bak
+/backup
+/conf
+/config
+/db
+/debug
+/data
+/database
+/deploy
 /WEB-INF
-/WEB-INF/classes
+/install
 /manage
 /manager
-/test
-/temp
+/monitor
 /tmp
-/cgi-bin
-/deploy
-/backup
+/temp
+/test
 """
 
 
@@ -54,19 +48,21 @@ def do_check(self, url):
     if url != '/' or not self.conn_pool or self._404_status == 301:
         return
 
-
     _folders = folders.split()
 
     for _url in _folders:
-        status, headers, html_doc = self._http_request(_url)
+        if not _url:
+            continue
+        status, headers, html_doc = self.http_request(_url)
 
         if status in (301, 302):
             location = headers.get('location', '')
             if location.startswith(self.base_url + _url + '/') or location.startswith(_url + '/'):
-                save_user_script_result(self, status, self.base_url + _url,
-                                        'Possible Sensitive Folder Found')
+                # save_user_script_result(self, status, self.base_url + _url,
+                #                         '', 'Possible Sensitive Folder Found')
+                self.enqueue(_url + '/')
+                self.crawl(_url + '/')
 
         if status == 206 and self._404_status != 206:
             save_user_script_result(self, status, self.base_url + _url,
-                                    'Possible Sensitive File Found')
-
+                                    '', 'Possible Sensitive File Found')

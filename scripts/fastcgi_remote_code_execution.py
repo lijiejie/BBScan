@@ -36,11 +36,10 @@ def test_fastcgi(ip):
         sock.close()
 
 
-
 def do_check(self, url):
     if url != '/':
         return
     host = self.host.split(':')[0]
     ret, txt = test_fastcgi(host)
     if ret:
-        save_user_script_result(self, '', host + ':9000', 'Fastcgi Remote Code Execution Vulnerability')
+        save_user_script_result(self, '', host + ':9000', '', 'Fastcgi Remote Code Execution Vulnerability')

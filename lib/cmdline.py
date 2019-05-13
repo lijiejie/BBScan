@@ -12,7 +12,7 @@ import os
 def parse_args():
     parser = argparse.ArgumentParser(prog='BBScan',
                                      formatter_class=argparse.RawTextHelpFormatter,
-                                     description='* A tiny Batch weB+ vulnerability Scanner. *\n'
+                                     description='* A tiny Batch weB vulnerability Scanner. *\n'
                                                  'By LiJieJie (http://www.lijiejie.com)',
                                      usage='BBScan.py [options]')
 
@@ -25,8 +25,8 @@ def parse_args():
     parser.add_argument('-d', metavar='TargetDirectory', type=str, default='',
                         help='Load all *.txt files from TargetDirectory')
 
-    parser.add_argument('--crawler', metavar='TargetDirectory', type=str, default='',
-                        help='Load all *.log crawler files from TargetDirectory')
+    parser.add_argument('--crawler', metavar='CrawlDirectory', type=str, default='',
+                        help='Load all *.log crawl files from CrawlDirectory')
 
     parser.add_argument('--full', dest='full_scan', default=False, action='store_true',
                         help='Process all sub directories.')
@@ -52,16 +52,16 @@ def parse_args():
     parser.add_argument('--network', metavar='MASK', type=int, default=32,
                         help='Scan all Target/MASK hosts, \nshould be an int between 24 and 31')
 
-    parser.add_argument('--timeout', metavar='Timeout', type=int, default=20,
-                        help='Max scan minutes for each website, 20 by default')
+    parser.add_argument('--timeout', metavar='Timeout', type=int, default=10,
+                        help='Max scan minutes for each website, 10 by default')
 
     parser.add_argument('-nnn', '--no-browser', dest='no_browser', default=False, action='store_true',
-                        help='Do not view report with browser after scan finished')
+                        help='Do not auto open web browser after scan finished')
 
     parser.add_argument('-md', default=False, action='store_true',
                         help='Save scan report as markdown format')
 
-    parser.add_argument('-v', action='version', version='%(prog)s 1.3    By LiJieJie (http://www.lijiejie.com)')
+    parser.add_argument('-v', action='version', version='%(prog)s 1.4  By LiJieJie')
 
     if len(sys.argv) == 1:
         sys.argv.append('-h')
@@ -72,24 +72,24 @@ def parse_args():
 
 
 def check_args(args):
-    if not args.f and not args.d and not args.host and not args.crawler:
-        msg = 'Args missing! One of following args should be specified  \n           ' \
-              '-f TargetFile \n           ' \
-              '-d TargetDirectory \n           ' \
-              '--crawler TargetDirectory \n           ' \
-              '--host www.host1.com www.host2.com 8.8.8.8'
+    if not (args.f or args.d or args.host or args.crawler):
+        msg = 'Args missing! One of following args should be specified  \n' \
+              '           -f TargetFile \n' \
+              '           -d TargetDirectory \n' \
+              '           --crawler TargetDirectory \n' \
+              '           --host www.host1.com www.host2.com 8.8.8.8'
         print msg
         exit(-1)
 
     if args.f and not os.path.isfile(args.f):
-        print 'TargetFile not found: %s' % args.f
+        print '[ERROR] TargetFile not found: %s' % args.f
         exit(-1)
 
     if args.d and not os.path.isdir(args.d):
-        print 'TargetDirectory not found: %s' % args.f
+        print '[ERROR] TargetDirectory not found: %s' % args.f
         exit(-1)
 
     args.network = int(args.network)
     if not (24 <= args.network <= 32):
-        print 'Network must be an integer between 24 and 31'
+        print '[ERROR] Network should be an integer between 24 and 31'
         exit(-1)

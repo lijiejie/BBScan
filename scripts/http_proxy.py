@@ -13,7 +13,7 @@ def do_check(self, url):
     ip = self.host.split(':')[0]
     ports_open = is_port_open(ip)
     headers = {
-        "User-Agent": "BugScan plugins http_proxy v0.1",
+        "User-Agent": "http_proxy v0.1",
         "Connection": "close"
     }
 
@@ -25,7 +25,7 @@ def do_check(self, url):
             code = _.status_code
             html = _.text
             if code == 200 and html.find("http://weibo.com/sitemap.xml") >= 0:
-                save_user_script_result(self, '', '%s:%s' % (ip, port), 'HTTP Proxy Found')
+                save_user_script_result(self, '', '%s:%s' % (ip, port), 'HTTP Proxy')
 
         except Exception as e:
             pass

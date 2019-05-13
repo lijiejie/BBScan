@@ -9,7 +9,7 @@ def do_check(self, url):
         return
     try:
         ip = self.host.split(':')[0]
-        conn = pymongo.MongoClient(host=ip, port=27017)
+        conn = pymongo.MongoClient(host=ip, port=27017, connectTimeoutMS=5000, socketTimeoutMS=5000)
         database_list = conn.database_names()
         if not database_list:
             conn.close()

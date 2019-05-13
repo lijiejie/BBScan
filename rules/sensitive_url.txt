@@ -1,0 +1,57 @@
+# each item must starts with right slash "/"
+# format:
+# /path  {tag="text string to find"} {status=STATUS_CODE} {type="content-type must have this string"} {type_no="content-type must not have this string"}
+# {root_only} set scan web root only
+
+/core              {status=200}     {tag="ELF"}       {root_only}
+# /debug.txt       {status=200}     {type="text/plain"}    {root_only}
+/.bash_history     {status=206}     {type_no="html"}    {root_only}
+/.rediscli_history {status=206}     {type_no="html"}    {root_only}
+/.bashrc           {status=206}     {type_no="html"}    {root_only}
+/.bash_profile     {status=206}     {type_no="html"}    {root_only}
+/.bash_logout      {status=206}     {type_no="html"}    {root_only}
+/.vimrc            {status=206}     {type_no="html"}    {root_only}
+/.DS_Store         {status=206}     {type_no="html"}
+/.history          {status=206}     {type_no="html"}    {root_only}
+/.htpasswd         {status=206}     {type_no="html"}    {root_only}
+/.htpasswd.bak     {status=206}     {type_no="html"}    {root_only}
+/htpasswd.bak      {status=206}     {type_no="html"}    {root_only}
+/nohup.out         {status=206}     {type_no="html"}    {root_only}
+/.mysql_history         {status=206}    {type_no="html"}    {root_only}
+/httpd.conf             {status=200}    {type_no="html"}    {root_only}
+
+
+/server-status          {tag="<title>Apache Status</title>"}   {root_only}
+/solr/                  {tag="<title>Solr Admin</title>"} {status=200} {type="html"}   {root_only}
+
+
+# /nagios/         
+# /kibana/
+/jmx-console/HtmlAdaptor       {status=200}   {tag="JBoss Management Console"}    {root_only}
+/cacti/            {tag="<title>Login to Cacti</title>"}                          {root_only}
+/zabbix/           {tag="<title>Zabbix</title>"}                          {root_only}
+
+# jenkins
+/jenkins/static/f3a41d2f/css/style.css	         {type="text/css"}        {status=200}    {tag="jenkins-home-link"}   {root_only}
+/static/f3a41d2f/css/style.css                   {type="text/css"}        {status=200}    {tag="jenkins-home-link"}   {root_only}
+/script		        {status=200}    {tag="Type in an arbitrary"}    {root_only}
+/jenkins/script		{status=200}    {tag="Type in an arbitrary"}    {root_only}
+/exit                    {status=200}    {tag="<title>POST required</title>"}    {root_only}
+
+/memadmin/index.php      {tag="<title>Login - MemAdmin"}         {root_only}
+/ganglia/                {tag="<title>Ganglia"}                  {root_only}
+
+# /data.txt           {status=200}    {type="text/plain"}    {root_only}
+/install.txt          {status=200}    {type="text/plain"}    {root_only}
+/INSTALL.TXT          {status=200}    {type="text/plain"}    {root_only}
+
+/a.out                       {status=200}      {type_no="html"}     {root_only}
+/key                         {status=200}      {type_no="html"}     {root_only}
+/keys                        {status=200}      {type_no="html"}     {root_only}
+/key.txt                     {status=200}      {type="text/plain"}  {root_only}
+# /temp.txt                    {status=200}    {type="text/plain"}
+# /tmp.txt                     {status=200}    {type="text/plain"}
+
+# /php.ini                     {status=200}    {type_no="html"}  {tag="["}
+
+/data.txt             {status=200}      {type="text/plain"}   {root_only}

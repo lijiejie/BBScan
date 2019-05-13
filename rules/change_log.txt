@@ -1,0 +1,6 @@
+# Chang Log
+/readme               {status=200}      {type_no="html"}      {root_only}
+/README               {status=200}      {type_no="html"}      {root_only}
+/readme.md            {status=200}      {type_no="html"}      {root_only}
+/readme.html          {status=200}      {type="html"}         {root_only}
+/changelog.txt        {status=200}      {type="text/plain"}   {root_only}

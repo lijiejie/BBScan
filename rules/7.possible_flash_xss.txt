@@ -1,9 +1,0 @@
-/ZeroClipboard.swf                 {status=206}      {type="flash"}
-/zeroclipboard.swf                 {status=206}      {type="flash"}
-/swfupload.swf                     {status=206}      {type="flash"}
-/swfupload/swfupload.swf           {status=206}      {type="flash"}
-/open-flash-chart.swf              {status=206}      {type="flash"}
-/uploadify.swf                     {status=206}      {type="flash"}
-/flowplayer.swf                    {status=206}      {type="flash"}
-/Jplayer.swf                       {status=206}      {type="flash"}
-/extjs/resources/charts.swf        {status=206}      {type="flash"}

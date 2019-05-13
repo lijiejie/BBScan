@@ -1,0 +1,4 @@
+# Resin Doc
+/resin-doc/resource/tutorial/jndi-appconfig/test?inputFile=/etc/profile   {tag="/etc/profile.d/*.sh"}    {root_only}
+# /resin-doc/viewfile/?contextpath=/&servletpath=&file=index.jsp            {tag="This is the default start page for the Resin server"}    {root_only}
+/resin-admin/	  {status=200}    {tag="<title>Resin Admin Login for"}    {root_only}
