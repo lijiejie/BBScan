@@ -133,6 +133,15 @@ class Scanner(object):
                 self.conn_pool = HTTPSConnPool(self.host, port=self.port, maxsize=self.args.t * 2, headers=HEADERS)
             else:
                 self.conn_pool = HTTPConnPool(self.host, port=self.port, maxsize=self.args.t * 2, headers=HEADERS)
+                # 301 redirect to https
+                status, headers, html_doc = self.http_request('/')
+                location = headers.get('Location', '')
+                if status == 301 and location.startswith('https://'):
+                    self.base_url = location.rstrip('/')
+                    _, loc_host, _ = parse_url(location)
+                    port = int(loc_host.split(':')[1]) if loc_host.find(':') > 0 else 443
+                    self.conn_pool = HTTPSConnPool(self.host, port=port, maxsize=self.args.t * 2, headers=HEADERS)
+                    print_msg('301 redirect: %s' % location)
 
         if self.args.scripts_only or (not is_port_open and not self.args.no_scripts):
             for _ in self.user_scripts:
