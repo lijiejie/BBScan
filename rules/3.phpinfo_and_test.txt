@@ -1,0 +1,11 @@
+
+/phpinfo.php   {tag="allow_url_fopen"}  {status=200}     {type="html"}
+/info.php      {tag="allow_url_fopen"}  {status=200}     {type="html"}
+/pi.php        {tag="allow_url_fopen"}  {status=200}     {type="html"}
+/p.php        {tag="allow_url_fopen"}  {status=200}     {type="html"}
+/apc.php       {status=200}     {tag="<title>APC INFO"}
+
+/test.txt      {status=200}     {type="text/plain"}
+/test2.txt     {status=200}     {type="text/plain"}
+/1.txt      {status=200}     {type="text/plain"}
+/bak.txt      {status=200}     {type="text/plain"}

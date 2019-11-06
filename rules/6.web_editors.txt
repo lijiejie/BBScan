@@ -1,0 +1,18 @@
+
+# Web Editors
+
+
+/fckeditor/_samples/default.html                      {tag="<title>FCKeditor"}   {type="html"}
+/ckeditor/samples/                                    {tag="<title>CKEditor Samples</title>"}
+/editor/ckeditor/samples/                             {tag="<title>CKEditor Samples</title>"}
+/ckeditor/samples/sample_posteddata.php               {tag="http://ckeditor.com</a>"}
+/editor/ckeditor/samples/sample_posteddata.php        {tag="http://ckeditor.com</a>"}
+/fck/editor/dialog/fck_spellerpages/spellerpages/server-scripts/spellchecker.php               {status=200}    {type="html"}  {tag="init_spell()"}
+/fckeditor/editor/dialog/fck_spellerpages/spellerpages/server-scripts/spellcheckder.php        {status=200}    {type="html"}  {tag="init_spell()"}
+
+
+# ueditor SSRF
+
+/ueditor/ueditor.config.js         {status=200}  {tag="window.UEDITOR_HOME_URL"}
+/ueditor/php/getRemoteImage.php    {tag="'tip':'"}    {status=200}
+

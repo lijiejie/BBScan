@@ -21,6 +21,8 @@
 
 {text="<title>404 Page Not Found</title>"}
 
+{text="404 Not Found"}
+
 {text="You do not have permission to get URL"}
 
 {text="<title>403 Forbidden</title>"}
@@ -44,3 +46,15 @@
 {text="Bad Request"}
 
 {text="http://appmedia.qq.com/media/flcdn/404.png"}
+
+{text="您访问的页面失联啦"}
+
+{text="您访问的页面找不回来了"}
+
+{text="<title>手机腾讯网</title>"}
+
+{text="404 error"}
+
+{text="很抱歉! 您现在访问的页面未找到"}
+
+{text="Your carrier's gateway IP is"}

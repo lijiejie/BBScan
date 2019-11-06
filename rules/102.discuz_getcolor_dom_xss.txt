@@ -1,0 +1,1 @@
+# /static/image/admincp/getcolor.htm  {status=200} {tag="if(fun) eval('parent.'+fun+'"}  {type="html"}

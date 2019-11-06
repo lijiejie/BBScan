@@ -1,0 +1,5 @@
+/logs/    {status=200}    {tag="<title>Index of"}
+
+# wordpress备份目录
+/wp-content/uploads/database-backups/    {status=200}    {tag="<title>Index of"}
+/wp-content/uploads/backup-database/    {status=200}    {tag="<title>Index of"}

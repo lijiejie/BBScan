@@ -3,7 +3,7 @@
 /WEB-INF/web.xml                        {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
 /WEB-INF/web.xml.bak                    {tag="<?xml"}    {status=206}                        {root_only}
 /WEB-INF/applicationContext.xml         {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
-# /WEB-INF/applicationContext-slave.xml   {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
+/WEB-INF/applicationContext-slave.xml   {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
 /WEB-INF/config.xml                     {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
 /WEB-INF/spring.xml                     {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
 /WEB-INF/struts-config.xml              {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
@@ -13,6 +13,8 @@
 /WEB-INF/classes/struts.xml             {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
 /WEB-INF/classes/struts_manager.xml     {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
 /WEB-INF/classes/conf/datasource.xml    {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
+/conf/web.xml    {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
+/conf/server.xml    {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
 /WEB-INF/classes/data.xml                         {tag="<?xml"}    {status=200}     {type="xml"}  {root_only}
 /WEB-INF/classes/config/applicationContext.xml    {tag="<?xml"}    {status=200}     {type="xml"}  {root_only}
 /WEB-INF/classes/applicationContext.xml           {tag="<?xml"}    {status=200}     {type="xml"}  {root_only}
@@ -24,14 +26,17 @@
 /WEB-INF/classes/rabbitmq.xml                 {tag="<?xml"}    {status=200}     {type="xml"}  {root_only}
 /WEB-INF/conf/activemq.xml                    {tag="<?xml"}    {status=200}     {type="xml"}  {root_only}
 
+
+
 /server.xml                   {status=200}     {tag="<?xml"}    {type="xml"}      {root_only}
 /config/database.yml          {status=200}     {type_no="html"}                   {root_only}
-
-# Spring Boot Actuator
 /configprops                  {status=200}     {tag="serverProperties"}           {root_only}
-/actuator/configprops         {status=200}     {tag="serverProperties"}           {root_only}
-/env                          {status=200}     {tag="systemProperties"}           {root_only}
 
+
+/WEB-INF/classes/conf/important.properties     {status=206}    {type_no="html"}  {root_only}
+/WEB-INF/classes/conf/system.properties   {status=206}    {type_no="html"}  {root_only}
+/WEB-INF/classes/important.properties     {status=206}    {type_no="html"}  {root_only}
+/WEB-INF/classes/config.properties        {status=206}    {type_no="html"}  {root_only}
 /WEB-INF/database.properties              {status=206}    {type_no="html"}  {root_only}
 /WEB-INF/web.properties                   {status=206}    {type_no="html"}  {root_only}
 /WEB-INF/log4j.properties                 {status=206}    {type_no="html"}  {root_only}
@@ -43,3 +48,14 @@
 /WEB-INF/classes/security.properties      {status=206}    {type_no="html"}  {root_only}
 /WEB-INF/conf/database_config.properties  {status=206}    {type_no="html"}  {root_only}
 /WEB-INF/config/dbconfig      {status=200}     {tag="passw"}    {type_no="html"}  {root_only}
+
+# 20180507
+/WEB-INF/classes/conf/product.properties    {status=206}    {type_no="html"}  {root_only}
+/WEB-INF/classes/spring-config.xml      {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
+
+
+# struts
+/struts/webconsole.html    {status=200}     {tag="OGNL"}    {type="html"}
+
+# Druid Monitor监控系统未授权访问
+/druid/index.html    {status=200}     {tag="Druid Stat Index</title>"}    {type="html"}

@@ -1,0 +1,2 @@
+#django dev mode
+/42ea856c85e05b2a910c08df2e3d04d4    {tag="Django settings file"}

@@ -33,7 +33,7 @@ if hasattr(ssl, '_create_unverified_context'):
 
 socket.setdefaulttimeout(30)
 
-USER_AGENT = 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36 BBScan/1.4'
+USER_AGENT = 'Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'
 HEADERS = {'User-Agent': USER_AGENT, 'Connection': 'Keep-Alive', 'Range': 'bytes=0-102400'}
 
 
