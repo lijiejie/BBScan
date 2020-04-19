@@ -1,26 +1,4 @@
-
-from lib.common import save_user_script_result
-
-'''
-Temporary disabled item:
-
-/WEB-INF/classes
-/jPlayer
-/jwplayer
-/extjs
-/swfupload
-/boss
-/editor
-/ckeditor
-/htmedit
-/htmleditor
-/ueditor
-/tomcat
-/output
-/fck
-/cgi-bin
-'''
-
+from lib.common import save_script_result
 
 folders = """
 /admin
@@ -64,5 +42,5 @@ def do_check(self, url):
                 self.crawl(_url + '/')
 
         if status == 206 and self._404_status != 206:
-            save_user_script_result(self, status, self.base_url + _url,
-                                    '', 'Possible Sensitive File Found')
+            save_script_result(self, status, self.base_url + _url,
+                               '', 'Possible Sensitive File Found')

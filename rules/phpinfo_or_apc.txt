@@ -5,7 +5,3 @@
 /i.php         {tag="allow_url_fopen"}  {status=200}     {type="html"}
 /php.php       {tag="allow_url_fopen"}  {status=200}     {type="html"}
 /apc.php       {status=200}     {tag="<title>APC INFO"}                 {root_only}
-
-
-
-

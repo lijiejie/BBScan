@@ -2,7 +2,9 @@
 
 import socket
 import binascii
-from lib.common import save_user_script_result
+from lib.common import save_script_result
+
+ports_to_check = 445
 
 
 def get_tree_connect_request(ip, tree_id):
@@ -16,8 +18,9 @@ def get_tree_connect_request(ip, tree_id):
 
 
 def do_check(self, url):
-    if url != '/':
+    if url != '/' or 445 not in self.ports_open:
         return
+
     ip = self.host.split(':')[0]
     port = 445
 
@@ -66,6 +69,6 @@ def do_check(self, url):
         data = s.recv(1024)
         s.close()
         if "\x05\x02\x00\xc0" in data:
-            save_user_script_result(self, '', ip + ':445', '', 'MS17010 SMB Remote Code Execution')
+            save_script_result(self, '', ip + ':445', '', 'MS17010 SMB Remote Code Execution')
     except Exception as e:
         return False

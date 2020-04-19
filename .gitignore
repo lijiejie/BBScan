@@ -2,8 +2,8 @@
 __pycache__/
 *.py[cod]
 
-# C extensions
-*.so
+tests/
+temp/
 
 # Distribution / packaging
 .Python

@@ -18,7 +18,7 @@
 # /log.tar.bz2            {status=206}    {type="application/octet-stream"}    {root_only}
 # /log.7z                 {status=206}    {type="application/octet-stream"}    {root_only}
 
-from lib.common import save_user_script_result
+from lib.common import save_script_result
 
 
 def do_check(self, url):
@@ -36,8 +36,8 @@ def do_check(self, url):
                     self.crawl('/' + log_folder + '/')
 
             if status == 206 and self._404_status != 206:
-                save_user_script_result(self, status, self.base_url + '/' + log_folder, '',
-                                        'Log File Found')
+                save_script_result(self, status, self.base_url + '/' + log_folder, '',
+                                   'Log File Found')
 
         url_lst = ['access.log', 'www.log', 'error.log', 'log.log', 'sql.log',
                    'errors.log', 'debug.log', 'db.log', 'install.log',
@@ -51,9 +51,9 @@ def do_check(self, url):
                 status, headers, html_doc = self.http_request(url_prefix + '/' + _url)
                 # print '/' + log_folder + '/' + _url
                 if status == 206 and \
-                        (self.has_status_404 or headers.get('content-type', '').find('application/') >= 0):
-                    save_user_script_result(self, status, self.base_url + url_prefix + '/' + _url,
-                                            '', 'Log File')
+                        (self._404_status == 404 or headers.get('content-type', '').find('application/') >= 0):
+                    save_script_result(self, status, self.base_url + url_prefix + '/' + _url,
+                                       '', 'Log File')
 
         for log_folder in folders:
             for _url in ['log.txt', 'logs.txt']:
@@ -61,5 +61,5 @@ def do_check(self, url):
                 status, headers, html_doc = self.http_request(url_prefix + '/' + _url)
                 # print '/' + log_folder + '/' + _url
                 if status == 206 and headers.get('content-type', '').find('text/plain') >= 0:
-                    save_user_script_result(self, status, self.base_url + url_prefix + '/' + _url,
-                                            '', 'Log File')
+                    save_script_result(self, status, self.base_url + url_prefix + '/' + _url,
+                                       '', 'Log File')
