@@ -1,5 +1,7 @@
 # BBScan 1.5 #
 
+[English readme](README_EN.md)
+
 **BBScan** 是一个高并发漏洞扫描工具，可用于
 
 * 高危漏洞爆发后，编写简单插件或规则，进行全网扫描
@@ -9,13 +11,6 @@ BBScan能够在1分钟内
 
 * 对超过2万个IP地址进行指定端口发现，同时，进行漏洞验证。例如，Samba  MS17010漏洞
 * 对超过1000个网站进行HTTP服务发现(80/443)，同时，请求某个指定URL，完成漏洞检测
-
-------
-
-**BBScan** is a super fast vulnerability scanner. 
-
-* A class B network (65534 hosts) could be scanned within 4 minutes (ex. Detect Samba MS17010)
-* Up to find more than 1000 target's web services and meanwhile, detect the vulnerability associated with a specified URL within one minute 
 
 ------
 
