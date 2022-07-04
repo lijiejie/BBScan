@@ -1,0 +1,4 @@
+
+# add golang pprof
+/debug/pprof/heap?debug=1  {status=200}  {type="text/plain"} {tag="heap profile"}
+/pprof/heap?debug=1  {status=200}  {type="text/plain"} {tag="heap profile"}

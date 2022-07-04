@@ -1,12 +1,12 @@
 # coding=utf-8
 
-import socket
+import asyncio
 from lib.common import save_script_result
 
 ports_to_check = 2181  # 默认服务端口
 
 
-def do_check(self, url):
+async def do_check(self, url):
     if url != '/':
         return
     port = 2181
@@ -16,14 +16,18 @@ def do_check(self, url):
         return
 
     try:
-        socket.setdefaulttimeout(5)
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((self.host, port))
-        s.send('envi')
-        data = s.recv(1024)
-        if 'Environment' in data:
-            save_script_result(self, '', 'zookeeper://%s:%s' % (self.host, port), '', 'Zookeeper Unauthorized Access')
+        reader, writer = await asyncio.open_connection(self.host, port)
+        writer.write(b'envi')
+        await writer.drain()
+        data = await reader.read(1024)
+        writer.close()
+        if b'Environment' in data:
+            await save_script_result(self, '', 'zookeeper://%s:%s' % (self.host, port), '', 'Zookeeper Unauthorized Access')
     except Exception as e:
         pass
     finally:
-        s.close()
+        try:
+            writer.close()
+            await writer.wait_closed()  # application data after close notify (_ssl.c:2730)
+        except Exception as e:
+            pass

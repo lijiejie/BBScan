@@ -1,14 +1,16 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
 #
-#  Common functions
-#
 
-import urlparse
+from urllib.parse import urlparse
 import re
-import struct
-import platform
-from gevent import socket
+import asyncio
+
+
+def is_ip_addr(s):
+    pattern_ip = re.compile(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$')
+    ret = pattern_ip.search(s)
+    return True if ret else False
 
 
 def clear_queue(this_queue):
@@ -20,28 +22,10 @@ def clear_queue(this_queue):
 
 
 def parse_url(url):
-    _ = urlparse.urlparse(url, 'http')
+    _ = urlparse(url, 'http')
     if not _.netloc:
-        _ = urlparse.urlparse('https://' + url, 'http')
+        _ = urlparse('https://' + url, 'http')
     return _.scheme, _.netloc, _.path if _.path else '/'
-
-
-def decode_response_text(txt, charset=None):
-    if charset:
-        try:
-            return txt.decode(charset)
-        except Exception as e:
-            pass
-    for _ in ['UTF-8', 'GBK', 'GB2312', 'iso-8859-1', 'big5']:
-        try:
-            return txt.decode(_)
-        except Exception as e:
-            pass
-    try:
-        return txt.decode('ascii', 'ignore')
-    except Exception as e:
-        pass
-    raise Exception('Fail to decode response Text')
 
 
 # calculate depth of a given URL, return tuple (url, depth)
@@ -54,11 +38,11 @@ def cal_depth(self, url):
     if url.startswith('//'):
         return '', 10000  # //www.baidu.com/index.php
 
-    if not urlparse.urlparse(url, 'http').scheme.startswith('http'):
+    if not urlparse(url, 'http').scheme.startswith('http'):
         return '', 10000  # no HTTP protocol
 
     if url.lower().startswith('http'):
-        _ = urlparse.urlparse(url, 'http')
+        _ = urlparse(url, 'http')
         if _.netloc == self.host:  # same hostname
             url = _.path
         else:
@@ -82,14 +66,13 @@ def cal_depth(self, url):
     return url, depth
 
 
-def save_script_result(self, status, url, title, vul_type=''):
-    self.lock.acquire()
-    # print '[+] [%s] %s' % (status, url)
-    if url not in self.results:
-        self.results[url] = []
-    _ = {'status': status, 'url': url, 'title': title, 'vul_type': vul_type}
-    self.results[url].append(_)
-    self.lock.release()
+async def save_script_result(self, status, url, title, vul_type=''):
+    async with self.lock:
+        # print '[+] [%s] %s' % (status, url)
+        if url not in self.results:
+            self.results[url] = []
+        _ = {'status': status, 'url': url, 'title': title, 'vul_type': vul_type}
+        self.results[url].append(_)
 
 
 def get_domain_sub(host):
@@ -105,39 +88,53 @@ def escape(html):
         replace('"', '&quot;').replace("'", '&#39;')
 
 
-def is_port_open(host, port):
+async def is_port_open(host, port):
+    if not port:
+        return True
     try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.settimeout(3.0)
-        if s.connect_ex((host, int(port))) == 0:
-            return True
-        else:
-            return False
-    except Exception as e:
-        return False
-    finally:
+        fut = asyncio.open_connection(host, int(port))
+        reader, writer = await asyncio.wait_for(fut, timeout=5)
+        writer.close()
         try:
-            s.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER, struct.pack('ii', 1, 0))
-            s.close()
+            await writer.wait_closed()    # application data after close notify (_ssl.c:2730)
         except Exception as e:
             pass
+        return True
+    except Exception as e:
+        return False
 
 
-def scan_given_ports(confirmed_open, confirmed_closed, host, ports):
+async def scan_given_ports(host, ports, confirmed_open, confirmed_closed):
     checked_ports = confirmed_open.union(confirmed_closed)
     ports_open = set()
     ports_closed = set()
 
+    scanning_ports = []
+    threads = []
     for port in ports:
-        if port in checked_ports:   # 不重复检测已确认端口
-            continue
-        if is_port_open(host, port):
-            ports_open.add(port)
+        if port not in checked_ports:   # 不重复检测已确认端口
+            scanning_ports.append(port)
+            threads.append(is_port_open(host, port))
+    ret = await asyncio.gather(*threads)
+    for i in range(len(threads)):
+        if ret[i]:
+            ports_open.add(scanning_ports[i])
         else:
-            ports_closed.add(port)
+            ports_closed.add(scanning_ports[i])
 
     return ports_open.union(confirmed_open), ports_closed.union(confirmed_closed)
 
 
+async def test():
+    r = await is_port_open('www.baidu.com', 80)
+    print(r)
+
+
+def run_test_is_port_open():
+    loop = asyncio.get_event_loop()
+    task = loop.create_task(test())
+    loop.run_until_complete(task)
+
+
 if __name__ == '__main__':
-    print(is_port_open('119.84.78.81', 80))
+    run_test_is_port_open()

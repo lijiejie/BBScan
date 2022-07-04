@@ -2,8 +2,7 @@
  - get width and height of console
  - works on linux,os x,windows,cygwin(windows)
 """
-
-__all__ = ['getTerminalSize']
+import os
 
 
 def getTerminalSize():
@@ -91,4 +90,4 @@ def _getTerminalSize_linux():
 
 if __name__ == "__main__":
     sizex, sizey = getTerminalSize()
-    print 'width =', sizex, 'height =', sizey
+    print('width =', sizex, 'height =', sizey)

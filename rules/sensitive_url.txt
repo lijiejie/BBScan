@@ -4,20 +4,20 @@
 # {root_only} set scan web root only
 
 /core              {status=200}     {tag="ELF"}       {root_only}
-# /debug.txt       {status=200}     {type="text/plain"}    {root_only}
-/.bash_history     {status=206}     {type_no="html"}    {root_only}
-/.rediscli_history {status=206}     {type_no="html"}    {root_only}
-/.bashrc           {status=206}     {type_no="html"}    {root_only}
-/.bash_profile     {status=206}     {type_no="html"}    {root_only}
-/.bash_logout      {status=206}     {type_no="html"}    {root_only}
-/.vimrc            {status=206}     {type_no="html"}    {root_only}
-/.DS_Store         {status=206}     {type_no="html"}
-/.history          {status=206}     {type_no="html"}    {root_only}
-/.htpasswd         {status=206}     {type_no="html"}    {root_only}
-/.htpasswd.bak     {status=206}     {type_no="html"}    {root_only}
-/htpasswd.bak      {status=206}     {type_no="html"}    {root_only}
-/nohup.out         {status=206}     {type_no="html"}    {root_only}
-/.mysql_history         {status=206}    {type_no="html"}    {root_only}
+# /debug.txt         {status=200}     {type="text/plain"}    {root_only}
+/.bash_history     {status=206}     {type="application/octet-stream"}    {root_only}
+/.rediscli_history {status=206}     {type="application/octet-stream"}    {root_only}
+/.bashrc           {status=206}     {type="application/octet-stream"}    {root_only}
+/.bash_profile     {status=206}     {type="application/octet-stream"}    {root_only}
+/.bash_logout      {status=206}     {type="application/octet-stream"}    {root_only}
+/.vimrc            {status=206}     {type="application/octet-stream"}    {root_only}
+/.DS_Store         {status=206}     {type="application/octet-stream"}
+/.history          {status=206}     {type="application/octet-stream"}    {root_only}
+/.htpasswd         {status=206}     {type="application/octet-stream"}    {root_only}
+/.htpasswd.bak     {status=206}     {type="application/octet-stream"}    {root_only}
+/htpasswd.bak      {status=206}     {type="application/octet-stream"}    {root_only}
+/nohup.out         {status=206}     {type="application/octet-stream"}    {root_only}
+/.mysql_history         {status=206}    {type="application/octet-stream"}    {root_only}
 /httpd.conf             {status=200}    {type_no="html"}    {root_only}
 
 
@@ -38,20 +38,23 @@
 /jenkins/script		{status=200}    {tag="Type in an arbitrary"}    {root_only}
 /exit                    {status=200}    {tag="<title>POST required</title>"}    {root_only}
 
-/memadmin/index.php      {tag="<title>Login - MemAdmin"}         {root_only}
-/ganglia/                {tag="<title>Ganglia"}                  {root_only}
+/memadmin/index.php      {tag="<title>Login - MemAdmin"}      {status=200}       {root_only}
+/ganglia/                {status=200}    {tag="<title>Ganglia"}                  {root_only}
 
 # /data.txt           {status=200}    {type="text/plain"}    {root_only}
-/install.txt          {status=200}    {type="text/plain"}    {root_only}
-/INSTALL.TXT          {status=200}    {type="text/plain"}    {root_only}
+/install.txt          {status=200}    {type="text/plain"}    {root_only}    {tag="passw"}
+/INSTALL.TXT          {status=200}    {type="text/plain"}    {root_only}    {tag="passw"}
 
-/a.out                       {status=200}      {type_no="html"}     {root_only}
-/key                         {status=200}      {type_no="html"}     {root_only}
-/keys                        {status=200}      {type_no="html"}     {root_only}
-/key.txt                     {status=200}      {type="text/plain"}  {root_only}
+/a.out                       {status=200}      {type_no="html"}
+/key                         {status=200}    {type_no="html"}
+/keys                        {status=200}    {type_no="html"}
+# /key.txt                     {status=200}    {type="text/plain"}
 # /temp.txt                    {status=200}    {type="text/plain"}
 # /tmp.txt                     {status=200}    {type="text/plain"}
 
-# /php.ini                     {status=200}    {type_no="html"}  {tag="["}
+# nginx status check
+/nstatus             {status=200} {tag="<title>Nginx http upstream check status</title>"}
+/status                 {status=200} {tag="<title>nginx vhost traffic status monitor</title>"}
 
-/data.txt             {status=200}      {type="text/plain"}   {root_only}
+# brpc
+/connections  {status=200}  {type="text/html"} {tag="server_connection_count"}

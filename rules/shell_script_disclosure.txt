@@ -1,0 +1,11 @@
+
+
+/install.sh           {status=206}    {root_only}    {tag='#!/'}      {type="text"}
+/deploy.sh            {status=206}    {root_only}    {tag='#!/'}      {type="text"}
+/upload.sh            {status=206}    {root_only}    {tag='#!/'}      {type="text"}
+/setup.sh             {status=206}    {root_only}    {tag='#!/'}      {type="text"}
+/backup.sh            {status=206}    {root_only}    {tag='#!/'}      {type="text"}
+/rsync.sh             {status=206}    {root_only}    {tag='#!/'}      {type="text"}
+/sync.sh              {status=206}    {root_only}    {tag='#!/'}      {type="text"}
+/test.sh              {status=206}    {root_only}    {tag='#!/'}      {type="text"}
+/run.sh               {status=206}    {root_only}    {tag='#!/'}      {type="text"}
