@@ -597,7 +597,11 @@ class Scanner(object):
             return self.base_url.lstrip('unknown://').rstrip(':None'), self.results
         except Exception as e:
             await self.print_msg('[scan exception] %s' % str(e))
-        await self.conn_pool.aclose()
+        finally:
+            try:
+                await self.conn_pool.aclose()
+            except Exception as e:
+                pass
 
 
 async def scan_process():
