@@ -6,6 +6,7 @@
  LiJieJie  my[at]lijiejie.com  http://www.lijiejie.com
 """
 
+import sys
 import codecs
 import asyncio
 import httpx
@@ -927,5 +928,9 @@ if __name__ == '__main__':
 
     q_targets = asyncio.Queue()    # targets Queue
     q_results = asyncio.Queue()    # results Queue
-    loop = asyncio.get_event_loop()
+    python_ver = sys.version
+    if "3.10" in python_ver:
+        loop = asyncio.new_event_loop()
+    else:
+        loop = asyncio.get_event_loop()
     loop.run_until_complete(main())
