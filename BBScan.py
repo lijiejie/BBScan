@@ -928,8 +928,7 @@ if __name__ == '__main__':
 
     q_targets = asyncio.Queue()    # targets Queue
     q_results = asyncio.Queue()    # results Queue
-    python_ver = sys.version
-    if "3.10" in python_ver:
+    if sys.version_info.major >= 3 and sys.version_info.minor >= 10:
         loop = asyncio.new_event_loop()
     else:
         loop = asyncio.get_event_loop()
