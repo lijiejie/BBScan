@@ -6,6 +6,7 @@
  LiJieJie  my[at]lijiejie.com  http://www.lijiejie.com
 """
 
+import sys
 import codecs
 import asyncio
 import httpx
@@ -924,7 +925,10 @@ if __name__ == '__main__':
         print('* Scripts scan was disabled')
     if args.require_ports:
         print('* Scripts scan port check: %s' % ','.join([str(x) for x in args.require_ports]))
-
+    if sys.version_info.major >= 3 and sys.version_info.minor >= 10:
+        loop = asyncio.new_event_loop()
+    else:
+        loop = asyncio.get_event_loop()
     q_targets = asyncio.Queue()    # targets Queue
     q_results = asyncio.Queue()    # results Queue
     loop = asyncio.get_event_loop()
