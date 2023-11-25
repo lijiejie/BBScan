@@ -1,7 +1,6 @@
 # -*- encoding: utf-8 -*-
 # report template
 
-import asyncio
 import time
 from string import Template
 import webbrowser
@@ -10,14 +9,14 @@ import codecs
 import os
 from lib.common import escape
 from lib.consle_width import getTerminalSize
-import lib.config as conf
+from lib import config
 
 
 # template for html
 html_general = """
 <html>
 <head>
-<title>BBScan 2.0 Scan Report</title>
+<title>BBScan 1.5 Scan Report</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <style>
     body {width:960px; margin:auto; margin-top:10px; background:rgb(240,240,240);}
@@ -63,7 +62,7 @@ html = {
 # template for markdown
 markdown_general = """
 # BBScan Scan Report
-Version: v 2.0
+Version: v 1.5
 Num of targets: ${tasks_processed_count}
 Num of vulnerable hosts: ${vulnerable_hosts_count}
 Time cost: ${cost_min} ${cost_seconds} seconds
@@ -93,10 +92,12 @@ template = {
 }
 
 
-async def save_report(args, q_results, _file):
+def save_report(args, _q_results, _file, tasks_processed_count):
 
+    is_markdown = args.md
+    no_browser = args.no_browser
     start_time = time.time()
-    a_template = template['markdown'] if args.md else template['html']
+    a_template = template['markdown'] if is_markdown else template['html']
     t_general = Template(a_template['general'])
     t_host = Template(a_template['host'])
     t_list_item = Template(a_template['list_item'])
@@ -110,13 +111,13 @@ async def save_report(args, q_results, _file):
     console_width = getTerminalSize()[0] - 2
 
     try:
-        while not conf.stop_me or q_results.qsize() > 0:
-            if q_results.qsize() == 0:
-                await asyncio.sleep(0.1)
+        while not config.stop_me or _q_results.qsize() > 0:
+            if _q_results.qsize() == 0:
+                time.sleep(0.1)
                 continue
 
-            while q_results.qsize() > 0:
-                item = await q_results.get()
+            while _q_results.qsize() > 0:
+                item = _q_results.get()
                 if type(item) is str:
                     message = '[%s] %s' % (time.strftime('%H:%M:%S', time.localtime()), item)
                     if not args.debug and args.network <= 22 and \
@@ -129,12 +130,12 @@ async def save_report(args, q_results, _file):
                 vulnerable_hosts_count += 1
 
                 # print
-                for key in results.keys():
+                for key in list(results.keys()):
                     for url in results[key]:
-                        print('  [+]%s %s' % (' [%s]' % url['status'] if url['status'] else '', url['url']))
+                        print(('  [+]%s %s' % (' [%s]' % url['status'] if url['status'] else '', url['url'])))
 
                 _str = ""
-                for key in results.keys():
+                for key in list(results.keys()):
                     for _ in results[key]:
                         _str += t_list_item.substitute(
                             {'status': ' [%s]' % _['status'] if _['status'] else '',
@@ -151,7 +152,7 @@ async def save_report(args, q_results, _file):
                 cost_seconds = '%.2f' % (cost_time % 60)
 
                 html_doc = t_general.substitute(
-                    {'tasks_processed_count': conf.tasks_count,
+                    {'tasks_processed_count': tasks_processed_count.value,
                      'vulnerable_hosts_count': vulnerable_hosts_count,
                      'cost_min': cost_min, 'cost_seconds': cost_seconds, 'content': content}
                 )
@@ -159,8 +160,8 @@ async def save_report(args, q_results, _file):
                 with codecs.open('report/%s' % report_name, 'w', encoding='utf-8') as outFile:
                     outFile.write(html_doc)
 
-        if conf.ports_saved_to_file:
-            print('* Ports data saved to %s' % args.save_ports)
+        if config.ports_saved_to_file:
+            print(('* Ports data saved to %s' % args.save_ports))
 
         if html_doc:
 
@@ -170,7 +171,7 @@ async def save_report(args, q_results, _file):
             cost_seconds = '%.1f' % (cost_time % 60)
 
             html_doc = t_general.substitute(
-                {'tasks_processed_count': conf.tasks_count,
+                {'tasks_processed_count': tasks_processed_count.value,
                  'vulnerable_hosts_count': vulnerable_hosts_count,
                  'cost_min': cost_min, 'cost_seconds': cost_seconds, 'content': content}
             )
@@ -178,15 +179,15 @@ async def save_report(args, q_results, _file):
             with codecs.open('report/%s' % report_name, 'w', encoding='utf-8') as outFile:
                 outFile.write(html_doc)
 
-            print('\n* %s vulnerable targets on sites in total.' % vulnerable_hosts_count)
-            print('* Scan report saved to report/%s' % report_name)
-            if not args.no_browser:
+            print(('\n* %s vulnerable targets on sites in total.' % vulnerable_hosts_count))
+            print(('* Scan report saved to report/%s' % report_name))
+            if not no_browser:
                 webbrowser.open_new_tab(os.path.abspath('report/%s' % report_name))
         else:
-            print('\n* No vulnerabilities found on sites in %s.' % _file)
+            print(('\n* No vulnerabilities found on sites in %s.' % _file))
 
     except Exception as e:
-        print('[save_report_thread Exception] %s %s' % (type(e), str(e)))
+        print(('[save_report_thread Exception] %s %s' % (type(e), str(e))))
         import traceback
         traceback.print_exc()
         sys.exit(-1)
