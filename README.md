@@ -14,7 +14,7 @@ Brute sub names for *.baidu.com *.qq.com *.bytedance.com with [subDomainsBrute](
 
 send the output files to BBScan,  scan reports are as shown below
 
-[qq.com_report.html](https://www.lijiejie.com/python/BBScan/qq.com_report.html)  [bytedance.com_report.html](https://www.lijiejie.com/python/BBScan/bytedance.com_report.html)  [baidu.com_report.html](https://www.lijiejie.com/python/BBScan/baidu.com_report.html)
+[qq.com_report.html](https://www.lijiejie.com/python/BBScan/qq.com_report.html)      [bytedance.com_report.html](https://www.lijiejie.com/python/BBScan/bytedance.com_report.html)       [baidu.com_report.html](https://www.lijiejie.com/python/BBScan/baidu.com_report.html)
 
 ### Install ###
 
