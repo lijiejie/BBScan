@@ -38,7 +38,7 @@
 /db.tar.gz              {status=206}    {type="application/octet-stream"}    {root_only}
 /db.tgz                 {status=206}    {type="application/octet-stream"}    {root_only}
 /db.tar.bz2             {status=206}    {type="application/octet-stream"}    {root_only}
-/db.inc                 {status=200}	{type_no="html"}
+# /db.inc                 {status=200}	{type_no="html"}
 /db.sqlite              {status=206}    {type="application/octet-stream"}    {root_only}
 
 
@@ -131,6 +131,7 @@
 /backup.sql             {status=206}     {type="application/octet-stream"}   {tag="CREATE TABLE"}    {root_only}
 /dump.sql               {status=206}     {type="application/octet-stream"}   {tag="CREATE TABLE"}    {root_only}
 /{sub}.sql              {status=206}     {type="application/octet-stream"}   {tag="CREATE TABLE"}    {root_only}
+/update.sql             {status=206}     {type="application/octet-stream"}   {tag="CREATE TABLE"}    {root_only}
 
 /index.zip              {status=206}       {type="application/octet-stream"}    {root_only}
 /index.7z               {status=206}       {type="application/octet-stream"}    {root_only}
@@ -152,6 +153,7 @@
 /x.tar.gz            {status=206}    {type="application/octet-stream"}    {root_only}
 /o.tar.gz            {status=206}    {type="application/octet-stream"}    {root_only}
 
+/conf.zip            {status=206}    {type="application/octet-stream"}    {root_only}
 /conf/conf.zip       {status=206}    {type="application/octet-stream"}    {root_only}
 /conf.tar.gz         {status=206}    {type="application/octet-stream"}    {root_only}
 /config.tar.gz       {status=206}    {type="application/octet-stream"}    {root_only}

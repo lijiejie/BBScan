@@ -45,7 +45,7 @@
 /install.txt          {status=200}    {type="text/plain"}    {root_only}    {tag="passw"}
 /INSTALL.TXT          {status=200}    {type="text/plain"}    {root_only}    {tag="passw"}
 
-/a.out                       {status=200}      {type_no="html"}
+# /a.out                       {status=200}      {type_no="html"}
 /key                         {status=200}    {type_no="html"}
 /keys                        {status=200}    {type_no="html"}
 # /key.txt                     {status=200}    {type="text/plain"}
@@ -58,3 +58,19 @@
 
 # brpc
 /connections  {status=200}  {type="text/html"} {tag="server_connection_count"}
+/metrics                            {status=200}        {tag="version"}       {root_only}
+/metrics?pretty=true                {status=200}        {tag="version"}       {root_only}
+/.;/metrics/metrics                 {status=200}        {tag="version"}       {root_only}
+/;/metrics/metrics?pretty=true      {status=200}        {tag="version"}       {root_only}
+/metrics/metrics?pretty=true        {status=200}        {tag="version"}       {root_only}
+/threads                            {status=200}        {tag="state="}        {root_only}
+/.;/metrics/threads                 {status=200}        {tag="state="}        {root_only}
+/;/metrics/threads                  {status=200}        {tag="state="}        {root_only}
+/metrics/threads                    {status=200}        {tag="state="}        {root_only}
+/api//actuator/metrics              {status=200}        {tag="state="}        {root_only}
+
+# prometheus
+/prometheus/metrics               {status=200}        {tag="application="}       {root_only}
+/prometheus                       {status=200}        {tag="application="}
+
+/eureka/apps                      {status=200}        {tag="<app>"}       {root_only}

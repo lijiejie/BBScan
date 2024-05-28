@@ -41,5 +41,5 @@ async def do_check(self, url):
                 await self.enqueue(_url + '/')
                 await self.crawl(_url + '/')
 
-        if status == 206 and self._404_status != 206:
+        if status == 206 and self._404_status != 206 and headers.get('content-type', '').find('application/') >= 0:
             await save_script_result(self, status, self.base_url + _url, '', 'Possible Sensitive File Found')

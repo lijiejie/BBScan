@@ -5,6 +5,42 @@
 from urllib.parse import urlparse
 import re
 import asyncio
+import platform
+import socket
+import dns.asyncresolver
+import time
+
+
+def get_dns_resolver():
+    resolver = dns.asyncresolver.Resolver()
+    for server in ['114.114.114.114', '180.76.76.76', '8.8.8.8']:  # Add public DNS Server
+        if server not in resolver.nameservers:
+            resolver.nameservers.append(server)
+    return resolver
+
+
+if platform.system() == 'Windows':
+    try:
+        def _call_connection_lost(self, exc):
+            try:
+                self._protocol.connection_lost(exc)
+            finally:
+                if hasattr(self._sock, 'shutdown'):
+                    try:
+                        if self._sock.fileno() != -1:
+                            self._sock.shutdown(socket.SHUT_RDWR)
+                    except Exception as e:
+                        pass
+                self._sock.close()
+                self._sock = None
+                server = self._server
+                if server is not None:
+                    server._detach()
+                    self._server = None
+
+        asyncio.proactor_events._ProactorBasePipeTransport._call_connection_lost = _call_connection_lost
+    except Exception as e:
+        pass
 
 
 def is_ip_addr(s):
@@ -35,6 +71,9 @@ def cal_depth(self, url):
     if url.find('?') >= 0:
         url = url[:url.find('?')]  # cut off query string
 
+    while url.find('/./') >= 0:
+        url = url.replace('/./', '/')
+
     if url.startswith('//'):
         return '', 10000  # //www.baidu.com/index.php
 
@@ -43,7 +82,7 @@ def cal_depth(self, url):
 
     if url.lower().startswith('http'):
         _ = urlparse(url, 'http')
-        if _.netloc == self.host:  # same hostname
+        if _.netloc == self.host or _.netloc == '%s:%s' % (self.host, self.port):  # same hostname
             url = _.path
         else:
             return '', 10000  # not the same hostname
@@ -63,6 +102,7 @@ def cal_depth(self, url):
         url = '/'.join(url.split('/')[:-2]) + '/'
 
     depth = url.count('/')
+    # print('cal_depth', url, depth)
     return url, depth
 
 
@@ -88,20 +128,51 @@ def escape(html):
         replace('"', '&quot;').replace("'", '&#39;')
 
 
+sem = asyncio.Semaphore(100)
+
+resolver = get_dns_resolver()
+
+
 async def is_port_open(host, port):
     if not port:
         return True
+
     try:
-        fut = asyncio.open_connection(host, int(port))
-        reader, writer = await asyncio.wait_for(fut, timeout=5)
-        writer.close()
-        try:
-            await writer.wait_closed()    # application data after close notify (_ssl.c:2730)
-        except Exception as e:
-            pass
-        return True
+        async with sem:
+            start_time = time.time()
+            if not is_ip_addr(host):
+                answers = await resolver.resolve(host, "A")
+                host = answers[0].address
+
+            fut = asyncio.open_connection(host, int(port))
+            reader, writer = await asyncio.wait_for(fut, timeout=10)
+            writer.close()
+            try:
+                await writer.wait_closed()    # application data after close notify (_ssl.c:2730)
+            except Exception as e:
+                print('is_port_open.wait_closed.exception:', type(e))
+            return True
+    except (asyncio.exceptions.TimeoutError, ConnectionRefusedError) as e:
+        pass
     except Exception as e:
+        print('is_port_open.exception:', e.__class__.__name__, str(e), host, port,
+              'elapsed %.2f seconds' % (time.time() - start_time))
         return False
+
+
+def get_http_title(html_doc):
+    if not html_doc:
+        return ''
+    m = re.search('<title>(.*?)</title>', html_doc, re.IGNORECASE)
+    return m.group(1) if m else ''
+
+
+def clear_url(base_url):
+    if base_url.startswith('unknown://'):
+        base_url = base_url[len('unknown://'):]
+    if base_url.endswith(':None'):
+        base_url = base_url[:-len(':None')]
+    return base_url
 
 
 async def scan_given_ports(host, ports, confirmed_open, confirmed_closed):

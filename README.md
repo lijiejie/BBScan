@@ -1,37 +1,84 @@
-# BBScan 2.0 #
+# BBScan 3.0 #
 
-**BBScan** 是一个高并发、轻量级的信息泄露扫描工具。
+`BBScan` 是一个高并发的、轻量级的Web漏洞扫描工具。它帮助安全工程师从大量目标中，快速发现，定位可能存在弱点的目标，辅助半自动化测试。
 
-它可以在短时间内完成数十万目标的扫描，帮助渗透工程师从大量无标签的主机中，定位到可能存在弱点的目标，进行下一步半自动化测试，或者是开启重量级扫描器。 它可以作为一个轻量级插件，集成到自动化扫描系统中。
+`BBScan` is a fast and light-weight web vulnerability scanner. It helps pen-testers pinpoint possibly vulnerable targets from a large number of web servers.
 
-因为其python插件扫描，跟作者即将释出的工具高度一致。2.0之后的版本，我们将只关注信息泄露扫描。
+* Scan common web vulnerabilities: **Data Leaks** / **Directory Traversal** /  **Admin Backends**
+* Extract **API Endpoints** from .js file, Scan **Token/Secrets/Pass/Key Leaks**
+* Recognize **Web Fingerprints**: web frameworks, programming languages, CMS,  middle-ware, open source software or commercial product name 
 
-**BBScan** is a fast and light weighted information disclosure vulnerabilitiy scanner.
+### Test Reports 
 
-Scan thousands of targets can be done in serveral minutes，which can help pentesters filter possible vulnerable hosts from large number of unlabeled targets. It can be integrated as a scan component in other scanner projects.
+Brute sub names for *.baidu.com *.qq.com *.bytedance.com with [subDomainsBrute](https://github.com/lijiejie/subDomainsBrute) and then 
 
-### 安装 Install ###
+send the output files to BBScan,  scan reports are as shown below
 
-Require python3.6+
+[qq.com_report.html](https://www.lijiejie.com/python/BBScan/qq.com_report.html)  [bytedance.com_report.html](https://www.lijiejie.com/python/BBScan/bytedance.com_report.html)  [baidu.com_report.html](https://www.lijiejie.com/python/BBScan/baidu.com_report.html)
+
+### Install ###
+
+Require Python 3.6+
 
 	pip3 install -r requirements.txt
 
-### 使用 Usage
+### Chang Log
 
-* ##### **从文件导入目标  Import urls from file**
+* **2024-05-27** 
+  * **New Features**：
+    * CMS识别功能，Web指纹来自 [FingerprintHub](https://github.com/0x727/FingerprintHub)  Credit to [@0x727](https://github.com/0x727)
+    * JavaScript解析支持，提取拼接API接口，支持检测Key/Secret/Token泄露
+    * 通过正则表达式提取URL，From: https://github.com/Threezh1/JSFinder  Credit to [@Threezh1](https://github.com/Threezh1)
+  * **减少漏报**：优化减少DNS查询次数，提高稳定性
+  * **减少误报**：优化了误报验证逻辑
+  * ``**界面优化**：输出更加易用的Web报告
+
+### Usage
+
+* ##### Scan from file
 
 ```
-python BBScan.py -f urls.txt
+python BBScan.py -f urls.txt --api
 ```
 
-* ##### 指定多个规则  Enable specified rules only
+* **Scan from command line**
+
+```
+python BBScan.py --host www.test.com https://test2.com http://test3.com:8080 10.1.2.3
+```
+
+* ##### Scan with specified rules only
 
 ```
 python BBScan.py --rule git_and_svn -f urls.txt
 ```
 
-### 参数  Parameters ###
+### Key Arguments   ###
 
+* `--network MASK`    
+
+  You scan involve other IPs under the same network to a scan
+
+  * `--host www.baidu.com --network 24`
+  * `-f urls.txt --network 28`
+
+* `--fp, --fingerprint`
+
+  Under this mode, only fingerprint scan performed only, this helps to save some time by disable rule/script based scan.
+
+* `--api`
+
+  Gather and display all API interfaces extracted from .js file
+  
+* `--skip, --skip-intranet`
+
+  Skip scanning private IP targets. 
+
+```	(venv_py) python BBScan.py
+	usage: BBScan.py [options]
+	
+	
+	
 	Targets:
 	
 	  --host [HOST [HOST ...]]
@@ -42,16 +89,19 @@ python BBScan.py --rule git_and_svn -f urls.txt
 	                        Load all *.log crawl files from CrawlDirectory
 	  --network MASK        Scan all Target/MASK neighbour hosts,
 	                        should be an integer between 8 and 31
+	  --skip, --skip-intranet
+	                        Do not scan private IPs, when you are not under the same network with the target
 	
-	HTTP SCAN:
+	Rule Based SCAN:
 	
 	  --rule [RuleFileName [RuleFileName ...]]
 	                        Import specified rule files only.
 	  -n, --no-crawl        No crawling, sub folders will not be processed
-	  -nn, --no-check404    No HTTP 404 existence check
+	  --no-check404         No HTTP 404 existence check
 	  --full                Process all sub directories
+	  --fp, --fingerprint   Disable rule and script scan, only check fingerprint
 	
-	Scripts SCAN:
+	Script Based SCAN:
 	
 	  --scripts-only        Scan with user scripts only
 	  --script [ScriptName [ScriptName ...]]
@@ -67,9 +117,10 @@ python BBScan.py --rule git_and_svn -f urls.txt
 	
 	  --proxy Proxy         Set HTTP proxy server
 	  --timeout Timeout     Max scan minutes for each target, 10 by default
-	  -md                   Save scan report as markdown format
+	  --api                 Gather and display all API interfaces extracted from .js file
 	  --save-ports PortsDataFile
 	                        Save open ports to PortsDataFile
 	  --debug               Show verbose debug info
-	  -nnn, --no-browser    Do not open web browser to view report
-	  -v                    show program's version number and exit
+	  --no-browser          Do not open web browser to view report
+	
+```

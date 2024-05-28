@@ -45,4 +45,6 @@
 
 {text="Bad Request"}
 
-{text="http://appmedia.qq.com/media/flcdn/404.png"}
+{text="The specified key does not exist"}
+
+{text="No message available"}

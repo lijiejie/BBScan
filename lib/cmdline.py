@@ -11,6 +11,7 @@ import os
 import glob
 import re
 import codecs
+from lib.config import version
 
 
 def parse_args():
@@ -19,7 +20,7 @@ def parse_args():
                                      description='* A fast vulnerability Scanner. *\n'
                                                  '* Find sensitive info disclosure vulnerabilities '
                                                  'from large number of targets *\n'
-                                                 'By LiJieJie (http://www.lijiejie.com)',
+                                                 'By LiJieJie (https://www.lijiejie.com)',
                                      usage='BBScan.py [options]')
 
     group_target = parser.add_argument_group('Targets', '')
@@ -33,18 +34,23 @@ def parse_args():
                               help='Load all *.log crawl files from CrawlDirectory')
     group_target.add_argument('--network', metavar='MASK', type=int, default=32,
                               help='Scan all Target/MASK neighbour hosts, \nshould be an integer between 8 and 31')
+    group_target.add_argument('--skip', '--skip-intranet', dest='skip_intranet',
+                              default=False, action='store_true',
+                              help='Do not scan private IPs, when you are not under the same network with the target')
 
-    group_http = parser.add_argument_group('HTTP SCAN', '')
+    group_http = parser.add_argument_group('Rule Based SCAN', '')
     group_http.add_argument('--rule', metavar='RuleFileName', type=str, default='', nargs='*',
                             help='Import specified rule files only.')
     group_http.add_argument('-n', '--no-crawl', dest='no_crawl', default=False, action='store_true',
                             help='No crawling, sub folders will not be processed')
-    group_http.add_argument('-nn', '--no-check404', dest='no_check404', default=False, action='store_true',
+    group_http.add_argument('--no-check404', dest='no_check404', default=False, action='store_true',
                             help='No HTTP 404 existence check')
     group_http.add_argument('--full', dest='full_scan', default=False, action='store_true',
                             help='Process all sub directories')
+    group_http.add_argument('--fp', '--fingerprint', dest='fingerprint_only', default=False, action='store_true',
+                            help='Disable rule and script scan, only check fingerprint')
 
-    group_scripts = parser.add_argument_group('Scripts SCAN', '')
+    group_scripts = parser.add_argument_group('Script Based SCAN', '')
     group_scripts.add_argument('--scripts-only', dest='scripts_only', default=False, action='store_true',
                                help='Scan with user scripts only')
     group_scripts.add_argument('--script', metavar='ScriptName', type=str, default='', nargs='*',
@@ -66,8 +72,12 @@ def parse_args():
     group_other.add_argument('--timeout', metavar='Timeout', type=int, default=10,
                              help='Max scan minutes for each target, 10 by default')
 
-    group_other.add_argument('-md', default=False, action='store_true',
-                             help='Save scan report as markdown format')
+    # Disabled for now, will be added back later
+    # group_other.add_argument('-md', default=False, action='store_true',
+    #                          help='Save scan report as markdown format')
+
+    group_other.add_argument('--api', default=False, action='store_true',
+                             help='Gather and display all API interfaces extracted from .js file')
 
     group_other.add_argument('--save-ports', metavar='PortsDataFile', dest='save_ports', type=str, default='',
                              help='Save open ports to PortsDataFile')
@@ -75,11 +85,11 @@ def parse_args():
     group_other.add_argument('--debug', default=False, action='store_true',
                              help='Show verbose debug info')
 
-    group_other.add_argument('-nnn', '--no-browser', dest='no_browser', default=False, action='store_true',
+    group_other.add_argument('--no-browser', dest='no_browser', default=False, action='store_true',
                              help='Do not open web browser to view report')
 
     group_other.add_argument('-v', action='version',
-                             version='%(prog)s 2.0 (https://github.com/lijiejie/BBScan)')
+                             version='%(prog)s ' + version + ' (https://github.com/lijiejie/BBScan)')
 
     if len(sys.argv) == 1:
         sys.argv.append('-h')
@@ -179,3 +189,8 @@ def check_args(args):
 
     if args.proxy and args.proxy.find('://') < 0:
         args.proxy = 'http://%s' % args.proxy
+
+    # 只需要指纹识别时，不需要404检查，也不需要抓取子页
+    if args.fingerprint_only:
+        args.no_check404 = True
+        # args.no_crawl = True

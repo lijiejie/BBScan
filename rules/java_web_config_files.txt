@@ -40,12 +40,27 @@
 /WEB-INF/conf/database_config.properties  {status=206}    {type_no="html"}  {root_only}
 /WEB-INF/config/dbconfig      {status=200}     {tag="passw"}    {type_no="html"}  {root_only}
 /monitoring                 {status=200}    {tag="<title>Monitoring JavaMelody on"} {root_only}
+/conf/catalina.properties                 {status=206}    {type_no="html"}  {root_only}
+/conf/logging.properties                  {status=206}    {type_no="html"}  {root_only}
 
 # tomcat leak
-/conf/web.xml                        {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
+/conf/web.xml                           {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
 /conf/server.xml                        {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
-/conf/tomcat-users.xml                        {tag="<tomcat-users>"}    {status=200}     {type="xml"}       {root_only}
+/conf/context.xml                       {tag="<?xml"}    {status=200}     {type="xml"}       {root_only}
+/conf/tomcat-users.xml                  {tag="<tomcat-users>"}    {status=200}     {type="xml"}       {root_only}
 
-# swagger ui
-#/swagger-ui.html      {status=200} {tag="<title>Swagger UI</title>"} {root_only}
-
+# swagger docs
+/swagger-ui.html      {status=200} {tag="<title>Swagger UI</title>"} {root_only}
+/swagger-resources      {status=200} {tag=""swagger":""}
+/api/swagger-resources  {status=200} {tag=""swagger":""}
+/api-docs             {status=200} {tag=""swagger":""}
+/v2/api-docs          {status=200} {tag=""swagger":""}
+/v3/api-docs          {status=200} {tag=""swagger":""}
+/v2/;/api-docs        {status=200} {tag=""swagger":""} {root_only}
+/..;/v2/api-docs      {status=200} {tag=""swagger":""} {root_only}
+/v2/swagger.json      {status=200} {tag=""swagger":""} {root_only}
+/swagger.json         {status=200} {tag=""swagger":""} {root_only}
+/v3/swagger.json      {status=200} {tag=""swagger":""} {root_only}
+/api/v2/api-docs      {status=200} {tag=""swagger":""} {root_only}
+/api/v2/api-docs;.css {status=200} {tag=""swagger":""} {root_only}
+/api/api-docs;.css    {status=200} {tag=""swagger":""} {root_only}

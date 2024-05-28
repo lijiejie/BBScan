@@ -14,4 +14,4 @@
 /..%252F..%252F..%252F..%252F..%252F..%252F..%252F..%252F..%252Fetc%252Fpasswd                    {tag="root:x:"}       {root_only}
 /%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2fetc%2fpasswd    {tag="root:x:"}       {root_only}
 
-/resource/tutorial/jndi-appconfig/test?inputFile=/etc/passwd      {tag="root:x:"}    {root_only}
+# /resource/tutorial/jndi-appconfig/test?inputFile=/etc/passwd      {tag="root:x:"}    {root_only}

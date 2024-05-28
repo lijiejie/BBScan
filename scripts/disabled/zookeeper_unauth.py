@@ -10,7 +10,7 @@ async def do_check(self, url):
     if url != '/':
         return
     port = 2181
-    if self.scheme == '	zookeeper' and self.port != 2181:  # 非标准端口
+    if self.scheme == 'zookeeper' and self.port != 2181:  # 非标准端口
         port = self.port
     elif 2181 not in self.ports_open:
         return

@@ -1,4 +1,4 @@
-# SSH
+# SSH Keys
 
 /.ssh/known_hosts          {status=206}      {type="application/octet-stream"}   {root_only}
 /.ssh/id_rsa               {status=200}      {tag="PRIVATE KEY-"}       {root_only}

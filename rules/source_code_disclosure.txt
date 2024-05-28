@@ -11,6 +11,8 @@
 /config/.config.php.swp  {status=200}    {tag="<?php"}
 /.config.php.swp         {status=200}    {tag="<?php"}
 
+/application/config/config.php.bak       {status=206}      {type="application/octet-stream"}    {tag="<?php"}
+/application/config/database.php.bak     {status=206}      {type="application/octet-stream"}    {tag="<?php"}
 /.settings.php.swp       {status=206}      {type="application/octet-stream"}           {tag="<?php"}
 /.database.php.swp       {status=206}      {type="application/octet-stream"}           {tag="<?php"}
 /.db.php.swp             {status=206}      {type="application/octet-stream"}           {tag="<?php"}
