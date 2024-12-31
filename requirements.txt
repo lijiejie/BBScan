@@ -1,5 +1,5 @@
 BeautifulSoup4>=4.11.1
 motor
-httpx
+httpx==0.27.0
 dnspython>=2.2.1
 pyjsparser==2.7.1
